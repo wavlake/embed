@@ -1,7 +1,7 @@
 import EmbedPlayer from "../components/embedPlayer";
 import NoExist from "../components/noExist";
 
-const domain = process.env.NEXT_PUBLIC_DOMAIN_URL;
+const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 const nodeId = process.env.NEXT_WAVLAKE_PUBLIC_NODE_ID;
 
 export async function getStaticPaths() {
