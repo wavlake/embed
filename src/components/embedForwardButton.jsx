@@ -8,10 +8,10 @@ export default function EmbedForwardButton(props) {
 
   return (
     <div 
-        className='h-8 flex items-center space-x-1 bg-brand-pink tracking-tight font-semibold p-2 rounded-full cursor-pointer hover:bg-brand-pink-light'
+        className='h-7 flex items-center space-x-1 bg-brand-black-light tracking-tight font-semibold p-2 rounded-full cursor-pointer hover:bg-brand-pink-light'
       >
         <FastForwardIcon 
-          className="flex h-4 fill-brand-black"
+          className="flex w-3 fill-brand-black"
           />
     </div>
   )
