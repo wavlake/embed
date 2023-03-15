@@ -1,5 +1,4 @@
 // From: https://kittygiraudel.com/2022/05/16/rate-limit-nextjs-api-routes/
-
 import rateLimit from "express-rate-limit";
 import slowDown from "express-slow-down";
 

@@ -1,5 +1,5 @@
-import { DefaultSeo } from "next-seo";
 import ErrorBoundary from "../components/errorBoundary";
+import { DefaultSeo } from "next-seo";
 
 export default function Layout({ children }) {
   return (

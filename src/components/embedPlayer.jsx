@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import EmbedPlayButton from "./embedPlayButton";
-import EmbedForwardButton from "./embedForwardButton";
-import ReactPlayer from "react-player";
 import BoostIcon from "../icons/BOOST.svg";
 import LogoIcon from "../icons/LOGO.svg";
-import { useForm } from "react-hook-form";
-import { Transition } from "@headlessui/react";
-import FundingInvoiceModal from "./fundingInvoiceModal";
 import { getInvoice } from "../utils/provider";
+import EmbedForwardButton from "./embedForwardButton";
+import EmbedPlayButton from "./embedPlayButton";
+import FundingInvoiceModal from "./fundingInvoiceModal";
+import { Transition } from "@headlessui/react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import ReactPlayer from "react-player";
 
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
 

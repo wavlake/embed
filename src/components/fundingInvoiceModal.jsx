@@ -1,9 +1,9 @@
-import { Transition } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
-import { DuplicateIcon } from "@heroicons/react/outline";
 import BoostBareIcon from "../icons/BOOST-BARE.svg";
+import { Transition } from "@headlessui/react";
+import { DuplicateIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import QRCode from "qrcode";
+import { Fragment, useEffect, useState } from "react";
 
 async function generateQR(text) {
   if (text) {
@@ -54,7 +54,7 @@ export default function FundingInvoiceModal(props) {
       leaveFrom="opacity-100 scale-100 "
       leaveTo="opacity-0 scale-95 "
     >
-      <div className="absolute z-10 my-8 mx-2 rounded-xl border border-brand-pink bg-brand-black py-2">
+      <div className="absolute z-20 my-4 mx-2 rounded-xl border border-brand-pink bg-brand-black py-2">
         <div className="m-2 flex justify-center">
           <Image src={qrImage} height={200} width={200} />
         </div>

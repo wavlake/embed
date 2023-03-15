@@ -1,5 +1,5 @@
-import PlayIcon from "./../icons/play.svg";
 import PauseIcon from "./../icons/pause.svg";
+import PlayIcon from "./../icons/play.svg";
 
 export default function EmbedPlayButton(props) {
   const { isPlaying } = props;
