@@ -6,14 +6,16 @@ import Image from "next/image";
 import QRCode from "qrcode";
 
 async function generateQR(text) {
-  try {
-    return QRCode.toDataURL(text)
-      .then((url) => url)
-      .catch((err) => {
-        console.error(err);
-      });
-  } catch (e) {
-    console.log(e);
+  if (text) {
+    try {
+      return QRCode.toDataURL(text)
+        .then((url) => url)
+        .catch((err) => {
+          console.error(err);
+        });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
@@ -27,7 +29,7 @@ async function copyTextToClipboard(text) {
 
 export default function FundingInvoiceModal(props) {
   const [isCopied, setIsCopied] = useState(false);
-  const [qrImage, setQrImage] = useState("");
+  const [qrImage, setQrImage] = useState(null);
 
   const { reset, isInvoiceOpen, setIsInvoiceOpen, paymentRequest } = props;
 

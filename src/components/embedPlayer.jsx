@@ -8,9 +8,9 @@ import LogoIcon from "../icons/LOGO.svg";
 import { useForm } from "react-hook-form";
 import { Transition } from "@headlessui/react";
 import FundingInvoiceModal from "./fundingInvoiceModal";
+import { getInvoice } from "../utils/provider";
 
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
-const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 
 export default function EmbedPlayer(props) {
   const ref = useRef(null);
@@ -51,13 +51,7 @@ export default function EmbedPlayer(props) {
 
   async function handleBoost(data) {
     try {
-      const result = await fetch(`${domain}/api/invoice`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const result = await getInvoice(data);
 
       const resultJson = await result.json();
 
