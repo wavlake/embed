@@ -1,6 +1,7 @@
 ## Getting Started
 
 First, install packages:
+
 ```bash
 npm install
 ```
