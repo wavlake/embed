@@ -54,7 +54,7 @@ export default function FundingInvoiceModal(props) {
       leaveFrom="opacity-100 scale-100 "
       leaveTo="opacity-0 scale-95 "
     >
-      <div className="absolute z-20 my-4 mx-2 rounded-xl border border-brand-pink bg-brand-black py-2">
+      <div className="z-20 w-full max-w-xl rounded-xl border border-brand-pink bg-brand-black py-2">
         <div className="m-2 flex justify-center">
           <Image src={qrImage} height={200} width={200} />
         </div>

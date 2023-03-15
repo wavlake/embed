@@ -83,7 +83,7 @@ export default function EmbedPlayer(props) {
     <>
       {trackData && (
         <div>
-          <div className="absolute w-full">
+          <div className="absolute left-0 right-1 z-20 m-auto">
             <FundingInvoiceModal
               reset={reset}
               isInvoiceOpen={isInvoiceOpen}
