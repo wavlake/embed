@@ -86,7 +86,7 @@ export default function FundingInvoiceModal(props) {
               type="button"
               className="flex items-center justify-center rounded-md border border-white px-5 py-1 text-sm font-semibold tracking-wide text-white hover:bg-brand-black-light"
             >
-              <BoostBareIcon className="-ml-1 flex h-5 fill-brand-pink" />
+              <BoostBareIcon className="-ml-2 flex h-5 fill-brand-pink" />
               Pay
             </button>
           </a>
