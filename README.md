@@ -16,6 +16,10 @@ yarn dev
 
 Open [http://localhost:3003](http://localhost:3003) with your browser to see the result.
 
+## Usage
+
+The Embed player serves content with the same URL paths as Player. For example, if a track's URL on Player is `https://<player-domain>/track/b1fddd49-a3b3-4cfa-af69-fab60f92724c` then the Embed version will be `https://<embed-domain>/track/b1fddd49-a3b3-4cfa-af69-fab60f92724c`. The same logic applies for artist and album pages.
+
 ## Housekeeping
 
 Run prettier before pushing commits:
