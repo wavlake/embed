@@ -22,5 +22,5 @@ export async function getStaticProps(context) {
 export default function Embed(props) {
   const { trackData } = props;
 
-  return <>{trackData ? <EmbedPlayer trackData={trackData} /> : <NoExist />}</>;
+  return <EmbedPlayer trackData={trackData} />;
 }
