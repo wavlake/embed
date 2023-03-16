@@ -5,6 +5,7 @@ import { checkInvoice, getInvoice } from "../utils/provider";
 import EmbedForwardButton from "./embedForwardButton";
 import EmbedPlayButton from "./embedPlayButton";
 import FundingInvoiceModal from "./fundingInvoiceModal";
+import NoExist from "./noExist";
 import { Transition } from "@headlessui/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -43,10 +44,12 @@ export default function EmbedPlayer(props) {
     if (typeof window.webln === "undefined") {
       setWebLnAvailable(false);
     }
-    setWidth(ref.current.offsetWidth);
+    if (ref.current) {
+      setWidth(ref.current.offsetWidth);
+    }
   }, []);
 
-  const { trackData, nodeId } = props;
+  const { trackData } = props;
 
   const trackDataLength = trackData.length - 1;
 
@@ -93,7 +96,7 @@ export default function EmbedPlayer(props) {
 
   return (
     <>
-      {trackData && (
+      {trackData.length > 0 ? (
         <div>
           <div className="absolute top-1 left-0 right-1 z-20 m-auto">
             <FundingInvoiceModal
@@ -230,8 +233,10 @@ export default function EmbedPlayer(props) {
             </div>
           </div>
         </div>
+      ) : (
+        <NoExist />
       )}
-      {hasWindow && (
+      {hasWindow && trackData.length > 0 && (
         <ReactPlayer
           controls={false}
           url={trackData[currentTrackIndex].liveUrl}
