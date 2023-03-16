@@ -1,5 +1,6 @@
 import BoostIcon from "../icons/BOOST.svg";
 import LogoIcon from "../icons/LOGO.svg";
+import poll from "../utils/poll";
 import { checkInvoice, getInvoice } from "../utils/provider";
 import EmbedForwardButton from "./embedForwardButton";
 import EmbedPlayButton from "./embedPlayButton";
@@ -9,7 +10,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactPlayer from "react-player";
-import poll from "../utils/poll";
 
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
 
@@ -74,13 +74,17 @@ export default function EmbedPlayer(props) {
       } else {
         setPaymentRequest(paymentRequest);
         setIsInvoiceOpen(true);
-        poll({fn: checkInvoice, data: { paymentHash: paymentHash }, interval: 12000, maxAttempts: 10})
-        .then(() => {
+        poll({
+          fn: checkInvoice,
+          data: { paymentHash: paymentHash },
+          interval: 12000,
+          maxAttempts: 10,
+        }).then(() => {
           setIsInvoiceOpen(false);
           setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
           setViewForm(false);
           reset();
-        })
+        });
       }
     } catch (e) {
       console.error(e);
