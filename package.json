@@ -1,7 +1,8 @@
 {
   "name": "embed",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "license" : "MIT",
   "scripts": {
     "debug": "NODE_OPTIONS='--inspect' next dev",
     "dev": "PORT=3003 next dev",
