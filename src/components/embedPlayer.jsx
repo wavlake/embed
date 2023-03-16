@@ -1,6 +1,6 @@
 import BoostIcon from "../icons/BOOST.svg";
 import LogoIcon from "../icons/LOGO.svg";
-import { getInvoice } from "../utils/provider";
+import { checkInvoice, getInvoice } from "../utils/provider";
 import EmbedForwardButton from "./embedForwardButton";
 import EmbedPlayButton from "./embedPlayButton";
 import FundingInvoiceModal from "./fundingInvoiceModal";
@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactPlayer from "react-player";
+import poll from "../utils/poll";
 
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
 
@@ -56,13 +57,14 @@ export default function EmbedPlayer(props) {
       const resultJson = await result.json();
 
       const paymentRequest = resultJson.payment_request;
+      const paymentHash = resultJson.payment_hash;
 
       if (webLnAvailable) {
         try {
           await webln.enable();
           const result = await window.webln.sendPayment(paymentRequest);
           if (result.preimage) {
-            setSuccessMessage(`Boosted ${data.amount} sats!`);
+            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
             setViewForm(false);
             reset();
           }
@@ -72,7 +74,13 @@ export default function EmbedPlayer(props) {
       } else {
         setPaymentRequest(paymentRequest);
         setIsInvoiceOpen(true);
-        return;
+        poll({fn: checkInvoice, data: { paymentHash: paymentHash }, interval: 12000, maxAttempts: 10})
+        .then(() => {
+          setIsInvoiceOpen(false);
+          setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
+          setViewForm(false);
+          reset();
+        })
       }
     } catch (e) {
       console.error(e);
@@ -83,7 +91,7 @@ export default function EmbedPlayer(props) {
     <>
       {trackData && (
         <div>
-          <div className="absolute left-0 right-1 z-20 m-auto">
+          <div className="absolute top-1 left-0 right-1 z-20 m-auto">
             <FundingInvoiceModal
               reset={reset}
               isInvoiceOpen={isInvoiceOpen}

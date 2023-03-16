@@ -9,9 +9,8 @@ export default async function handler(req, res) {
   }
 
   await apiClient
-    .post(`/ln/generate-amp-invoice`, req.body)
+    .get(`/ln/check-amp-invoice?paymentHash=${req.query.paymentHash}`)
     .then(({ data }) => {
-      // console.log(data)
       res.status(200).json(data);
     })
     .catch(({ err }) => {
