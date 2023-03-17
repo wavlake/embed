@@ -81,13 +81,18 @@ export default function EmbedPlayer(props) {
           fn: checkInvoice,
           data: { paymentHash: paymentHash },
           interval: 12000,
-          maxAttempts: 10,
-        }).then(() => {
-          setIsInvoiceOpen(false);
-          setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-          setViewForm(false);
-          reset();
-        });
+          maxAttempts: 12,
+        })
+          .then(() => {
+            setIsInvoiceOpen(false);
+            setViewForm(false);
+            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
+            reset();
+          })
+          .catch(() => {
+            setIsInvoiceOpen(false);
+            setViewForm(false);
+          });
       }
     } catch (e) {
       console.error(e);
@@ -106,18 +111,19 @@ export default function EmbedPlayer(props) {
               paymentRequest={paymentRequest}
             />
           </div>
-          <div className="grid max-w-xl grid-cols-1 grid-rows-3 space-x-1 -space-y-1 rounded-xl bg-brand-black">
+          <div className="grid max-w-xl grid-cols-1 grid-rows-2 space-x-1 space-y-1 rounded-xl bg-brand-black xs:grid-rows-3">
             {/* IMAGE CONTAINER */}
-            <div className="row-span-2 mx-auto my-auto flex justify-start px-2">
+            <div className="row-span-2 mx-auto my-2 flex justify-start px-2 xs:my-auto">
               <Image
                 src={trackData[currentTrackIndex].artworkUrl}
-                width={220}
-                height={220}
+                // layout={'fixed'}
+                width={200}
+                height={200}
               />
             </div>
 
             {/* TRACK METADATA & CONTROLS */}
-            <div className="row-span-1 grid grid-rows-2 px-2">
+            <div className="row-span-1 grid grid-rows-1 px-2 pb-3">
               {/* ROW 1 */}
               <div className="row-span-1 mt-1 tracking-tighter text-white">
                 <a
@@ -149,7 +155,7 @@ export default function EmbedPlayer(props) {
 
               {/* ROW 2 */}
               <div className="row-span-1 grid grid-cols-7 items-center">
-                <div className="col-span-2 flex items-center justify-self-start">
+                <div className="col-span-1 flex items-center justify-self-start">
                   <div onClick={() => setIsPlaying(!isPlaying)}>
                     <EmbedPlayButton isPlaying={isPlaying} />
                   </div>
@@ -170,7 +176,7 @@ export default function EmbedPlayer(props) {
                   enter="transition-opacity duration-200"
                   enterFrom="opacity-0 -translate-x-20"
                   enterTo="opacity-100"
-                  className="col-span-3"
+                  className="col-span-4"
                 >
                   <div className="">
                     <form
@@ -205,7 +211,7 @@ export default function EmbedPlayer(props) {
                   </div>
                 </Transition>
                 <div
-                  className={`${!viewForm ? "col-span-3 flex" : "hidden"}`}
+                  className={`${!viewForm ? "col-span-4 flex" : "hidden"}`}
                   onClick={() => setViewForm(!viewForm)}
                 >
                   <BoostIcon className="h-9 cursor-pointer fill-brand-black-light hover:fill-brand-pink-light" />

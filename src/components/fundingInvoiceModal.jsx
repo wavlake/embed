@@ -30,6 +30,7 @@ async function copyTextToClipboard(text) {
 export default function FundingInvoiceModal(props) {
   const [isCopied, setIsCopied] = useState(false);
   const [qrImage, setQrImage] = useState(null);
+  const [payDisplay, setPayDisplay] = useState(true);
 
   const { reset, isInvoiceOpen, setIsInvoiceOpen, paymentRequest } = props;
 
@@ -40,6 +41,7 @@ export default function FundingInvoiceModal(props) {
   function closeModal() {
     setIsInvoiceOpen(false);
     setIsCopied(false);
+    // setPayDisplay(true);
     reset();
   }
 
@@ -73,18 +75,24 @@ export default function FundingInvoiceModal(props) {
               copyTextToClipboard(`${paymentRequest}`).then(setIsCopied(true));
             }}
           >
-            <DuplicateIcon
-              className={`${
-                isCopied
-                  ? "text-brand-pink"
-                  : "text-white group-hover:text-brand-black-light"
-              } h-7 cursor-pointer transition`}
-            ></DuplicateIcon>
+            <div className="group flex items-center group-hover:cursor-pointer">
+              <DuplicateIcon
+                className={`${
+                  isCopied ? "text-brand-pink" : "text-white"
+                } h-7 group-hover:text-brand-black-light`}
+              />
+              <p className="flex w-4 text-xs tracking-tight text-white group-hover:text-brand-black-light">
+                {isCopied ? "Copied" : "Copy"}
+              </p>
+            </div>
           </div>
           <a href={`lightning:${paymentRequest}`}>
             <button
               type="button"
-              className="flex items-center justify-center rounded-md border border-white px-5 py-1 text-sm font-semibold tracking-wide text-white hover:bg-brand-black-light"
+              className={`${
+                payDisplay ? "flex" : "hidden"
+              } flex items-center justify-center px-5 py-1 text-sm font-semibold tracking-wide text-white`}
+              // onClick={() => setPayDisplay(true)}
             >
               <BoostBareIcon className="-ml-2 flex h-5 fill-brand-pink" />
               Pay
