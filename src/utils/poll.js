@@ -6,15 +6,15 @@ export default async function ({ fn, data, interval, maxAttempts }) {
     attempts++;
 
     let resultJson = await result.json();
+
     if (resultJson.status === true) {
-      return resolve(resultJson.status);
+      return resolve({ status: resultJson.status });
     } else if (maxAttempts && attempts === maxAttempts) {
       return reject(new Error("Exceeded max attempts"));
     } else {
-      // console.log(result)
       setTimeout(executePoll, interval, resolve, reject);
     }
   };
 
-  return new Promise(executePoll).catch((e) => console.log(e));
+  return new Promise(executePoll);
 }
