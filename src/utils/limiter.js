@@ -30,9 +30,10 @@ export const getRateLimitMiddlewares = ({
         req.headers["x-vercel-ip-country"]
       )
     ) {
-      res.status(500);
+      res.status(444);
       res.json({ error: err });
     } else {
+      res.status(200);
       next();
     }
   },
