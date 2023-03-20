@@ -1,4 +1,4 @@
-// From: https://kittygiraudel.com/2022/05/16/rate-limit-nextjs-api-routes/
+// Adapted from: https://kittygiraudel.com/2022/05/16/rate-limit-nextjs-api-routes/
 import rateLimit from "express-rate-limit";
 import slowDown from "express-slow-down";
 
@@ -23,6 +23,19 @@ export const getRateLimitMiddlewares = ({
 } = {}) => [
   slowDown({ keyGenerator: getIP, windowMs, delayAfter, delayMs }),
   rateLimit({ keyGenerator: getIP, windowMs, max: limit }),
+  // Geoblocking middleware function
+  async (req, res, next) => {
+    if (
+      ["CU", "IR", "KP", "RU", "SY"].includes(
+        req.headers["x-vercel-ip-country"]
+      )
+    ) {
+      res.status(500);
+      res.json({ error: err });
+    } else {
+      next();
+    }
+  },
 ];
 
 const middlewares = getRateLimitMiddlewares();
