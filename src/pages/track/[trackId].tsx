@@ -18,7 +18,6 @@ export const getStaticProps: GetStaticProps<EmbedProps> = async (context) => {
 
   const data = await result.json();
 
-  console.log({ data });
   return { props: { trackData: data } };
 };
 
