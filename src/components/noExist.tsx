@@ -12,4 +12,4 @@ const NoExist: React.FC = () => (
   </div>
 );
 
-export default NoExist
+export default NoExist;

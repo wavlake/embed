@@ -1,6 +1,6 @@
 import EmbedPlayer from "../../components/embedPlayer";
-import { GetStaticPaths, GetStaticProps } from "next";
 import { EmbedProps } from "../../utils/commonTypes";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 
@@ -9,7 +9,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: [],
     fallback: "blocking",
   };
-}
+};
 
 export const getStaticProps: GetStaticProps<EmbedProps> = async (context) => {
   const { trackId } = context.params;
@@ -18,9 +18,9 @@ export const getStaticProps: GetStaticProps<EmbedProps> = async (context) => {
 
   const data = await result.json();
 
-  console.log({data})
+  console.log({ data });
   return { props: { trackData: data } };
-}
+};
 
 export default function Embed(props: EmbedProps) {
   const { trackData } = props;

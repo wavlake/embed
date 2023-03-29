@@ -1,6 +1,9 @@
 import React, { PropsWithChildren } from "react";
 
-class ErrorBoundary extends React.Component<PropsWithChildren, { hasError: boolean; }> {
+class ErrorBoundary extends React.Component<
+  PropsWithChildren,
+  { hasError: boolean }
+> {
   constructor(props) {
     super(props);
 
