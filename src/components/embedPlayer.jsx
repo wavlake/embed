@@ -51,11 +51,12 @@ export default function EmbedPlayer(props) {
 
   const reactPlayer = useRef();
   const onSeekHandler = (event) => {
-    const progressBarWidth = document.getElementById('progressBar').offsetWidth;
-    const clickXPosition = event.clientX - 12 // 12 pixels of padding + margin on the left
+    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
+    const clickXPosition = event.clientX - 12; // 12 pixels of padding + margin on the left
     const targetSeek = clickXPosition / progressBarWidth;
-    reactPlayer.current.seekTo(targetSeek)
-  }
+    reactPlayer.current.seekTo(targetSeek);
+  };
+
   const { trackData } = props;
 
   const trackDataLength = trackData.length - 1;
@@ -147,7 +148,12 @@ export default function EmbedPlayer(props) {
                   by {trackData[currentTrackIndex].artist}
                 </p>
                 {/* PROGRESS BAR */}
-                <div className="h-3" id="progressBar" ref={progressBarRef} onClick={onSeekHandler}>
+                <div
+                  className="h-3"
+                  id="progressBar"
+                  ref={progressBarRef}
+                  onClick={onSeekHandler}
+                >
                   <div className="my-2 border-b-2 border-brand-pink pt-2" />
                 </div>
                 {/* Overlay */}
