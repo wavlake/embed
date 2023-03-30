@@ -154,7 +154,7 @@ export default function EmbedPlayer(props) {
                   ref={progressBarRef}
                   onClick={onSeekHandler}
                 >
-                  <div className="my-2 border-b-2 border-brand-pink pt-2" />
+                  <div className="my-2 border-b-2 border-brand-pink pt-1" />
                 </div>
                 {/* Overlay */}
                 <div
