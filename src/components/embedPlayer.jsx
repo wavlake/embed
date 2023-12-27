@@ -15,7 +15,7 @@ import ReactPlayer from "react-player";
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
 
 export default function EmbedPlayer(props) {
-  const ref = useRef(null);
+  const progressBarRef = useRef(null);
 
   // Hydration fix for ReactPlayer & React 18
   const [hasWindow, setHasWindow] = useState(false);
@@ -44,10 +44,18 @@ export default function EmbedPlayer(props) {
     if (typeof window.webln === "undefined") {
       setWebLnAvailable(false);
     }
-    if (ref.current) {
-      setWidth(ref.current.offsetWidth);
+    if (progressBarRef.current) {
+      setWidth(progressBarRef.current.offsetWidth);
     }
   }, []);
+
+  const reactPlayer = useRef();
+  const onSeekHandler = (event) => {
+    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
+    const clickXPosition = event.clientX - 12; // 12 pixels of padding + margin on the left
+    const targetSeek = clickXPosition / progressBarWidth;
+    reactPlayer.current.seekTo(targetSeek);
+  };
 
   const { trackData } = props;
 
@@ -140,10 +148,17 @@ export default function EmbedPlayer(props) {
                   by {trackData[currentTrackIndex].artist}
                 </p>
                 {/* PROGRESS BAR */}
-                <div className="my-2 border-b-2 border-brand-pink" ref={ref} />
+                <div
+                  className="h-3"
+                  id="progressBar"
+                  ref={progressBarRef}
+                  onClick={onSeekHandler}
+                >
+                  <div className="my-2 border-b-2 border-brand-pink pt-1" />
+                </div>
                 {/* Overlay */}
                 <div
-                  className="relative z-10 -translate-y-2.5 border-b-2 border-brand-pink-dark"
+                  className="relative z-10 -translate-y-2 border-b-2 border-brand-pink-dark"
                   style={{
                     width: `${trackProgress}%`,
                     transitionProperty: "width",
@@ -244,6 +259,7 @@ export default function EmbedPlayer(props) {
       )}
       {hasWindow && trackData.length > 0 && (
         <ReactPlayer
+          ref={reactPlayer}
           controls={false}
           url={trackData[currentTrackIndex].liveUrl}
           playing={isPlaying}
