@@ -16,7 +16,7 @@ export async function getStaticProps(context) {
 
   const data = await result.json();
 
-  return { props: { trackData: data } };
+  return { props: { trackData: data?.data?.topTracks } };
 }
 
 export default function Embed(props) {

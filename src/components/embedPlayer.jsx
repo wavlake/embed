@@ -123,7 +123,10 @@ export default function EmbedPlayer(props) {
             {/* IMAGE CONTAINER */}
             <div className="row-span-2 mx-auto my-2 flex justify-start px-2 xs:my-auto">
               <Image
-                src={trackData[currentTrackIndex].artworkUrl}
+                src={
+                  trackData[currentTrackIndex].artworkUrl ||
+                  trackData[currentTrackIndex].podcast?.artworkUrl
+                }
                 // layout={'fixed'}
                 width={200}
                 height={200}
@@ -135,7 +138,9 @@ export default function EmbedPlayer(props) {
               {/* ROW 1 */}
               <div className="row-span-1 mt-1 tracking-tighter text-white">
                 <a
-                  href={`${shareUrl}/track/${trackData[currentTrackIndex].id}`}
+                  href={`${shareUrl}/${
+                    trackData[currentTrackIndex].podcast ? "episode" : "track"
+                  }/${trackData[currentTrackIndex].id}`}
                   target={"_blank"}
                   rel={"noreferrer"}
                   className="flex items-center"
@@ -145,7 +150,10 @@ export default function EmbedPlayer(props) {
                   </p>
                 </a>
                 <p className="mt-1 flex text-xs">
-                  by {trackData[currentTrackIndex].artist}
+                  by{" "}
+                  {trackData[currentTrackIndex].artist ||
+                    trackData[currentTrackIndex].podcast?.name ||
+                    trackData[currentTrackIndex].podcast}
                 </p>
                 {/* PROGRESS BAR */}
                 <div

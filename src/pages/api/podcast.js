@@ -1,11 +1,11 @@
 import catalogClient from "../../utils/catalogClient";
 
 export default async function handler(req, res) {
-  const artistId = await catalogClient
-    .get(`/artists/${req.query.artistUrl}/url`)
+  const podcastId = await catalogClient
+    .get(`/podcasts/${req.query.podcastUrl}/url`)
     .then(({ data }) => {
       if (!data?.data?.id) {
-        return res.status(404).json({ err: "Artist not found" });
+        return res.status(404).json({ err: "Podcast not found" });
       } else if (data?.data?.id) {
         return data.data.id;
       }
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     });
 
   await catalogClient
-    .get(`/artists/${artistId}`)
+    .get(`/episodes/${podcastId}/podcast`)
     .then(({ data }) => {
       res.status(200).json(data);
     })
