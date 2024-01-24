@@ -1,7 +1,7 @@
-import apiClient from "../../utils/apiClient";
+import catalogClient from "../../utils/catalogClient";
 
 export default async function handler(req, res) {
-  await apiClient
+  await catalogClient
     .get(`/episodes/${req.query.episodeId}`)
     .then(({ data }) => {
       res.status(200).json(data);

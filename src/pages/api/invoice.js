@@ -1,5 +1,5 @@
-import apiClient from "../../utils/apiClient";
 import applyRateLimit from "../../utils/limiter";
+import serverClient from "../../utils/serverClient";
 
 export default async function handler(req, res) {
   try {
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(429).send("Too many requests");
   }
 
-  await apiClient
+  await serverClient
     .post(`/ln/generate-amp-invoice`, req.body)
     .then(({ data }) => {
       // console.log(data)

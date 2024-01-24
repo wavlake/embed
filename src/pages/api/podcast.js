@@ -1,7 +1,7 @@
-import apiClient from "../../utils/apiClient";
+import catalogClient from "../../utils/catalogClient";
 
 export default async function handler(req, res) {
-  const podcastId = await apiClient
+  const podcastId = await catalogClient
     .get(`/podcasts/${req.query.podcastUrl}/url`)
     .then(({ data }) => {
       if (!data?.data?.id) {
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       res.status(400).json({ err });
     });
 
-  await apiClient
+  await catalogClient
     .get(`/episodes/${podcastId}/podcast`)
     .then(({ data }) => {
       res.status(200).json(data);
