@@ -139,9 +139,7 @@ export default function EmbedPlayer(props) {
               <div className="row-span-1 mt-1 tracking-tighter text-white">
                 <a
                   href={`${shareUrl}/${
-                    trackData[currentTrackIndex].podcast?.id
-                      ? "episode"
-                      : "track"
+                    trackData[currentTrackIndex].podcast ? "episode" : "track"
                   }/${trackData[currentTrackIndex].id}`}
                   target={"_blank"}
                   rel={"noreferrer"}
@@ -154,7 +152,8 @@ export default function EmbedPlayer(props) {
                 <p className="mt-1 flex text-xs">
                   by{" "}
                   {trackData[currentTrackIndex].artist ||
-                    trackData[currentTrackIndex].podcast?.name}
+                    trackData[currentTrackIndex].podcast?.name ||
+                    trackData[currentTrackIndex].podcast}
                 </p>
                 {/* PROGRESS BAR */}
                 <div
