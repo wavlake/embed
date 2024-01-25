@@ -14,6 +14,14 @@ import ReactPlayer from "react-player";
 
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
 
+const contentLink = (isTrack, id) => {
+  if (isTrack) {
+    return `${shareUrl}/track/${id}`;
+  } else {
+    return `${shareUrl}/episode/${id}`;
+  }
+};
+
 export default function EmbedPlayer(props) {
   const progressBarRef = useRef(null);
 
@@ -138,9 +146,10 @@ export default function EmbedPlayer(props) {
               {/* ROW 1 */}
               <div className="row-span-1 mt-1 tracking-tighter text-white">
                 <a
-                  href={`${shareUrl}/${
-                    trackData[currentTrackIndex].podcast ? "episode" : "track"
-                  }/${trackData[currentTrackIndex].id}`}
+                  href={contentLink(
+                    trackData[currentTrackIndex].podcast === undefined,
+                    trackData[currentTrackIndex].id
+                  )}
                   target={"_blank"}
                   rel={"noreferrer"}
                   className="flex items-center"
@@ -241,7 +250,10 @@ export default function EmbedPlayer(props) {
                 </div>
                 <div className="col-span-2 flex cursor-pointer justify-self-end">
                   <a
-                    href={`${shareUrl}/track/${trackData[currentTrackIndex].id}`}
+                    href={contentLink(
+                      trackData[currentTrackIndex].podcast === undefined,
+                      trackData[currentTrackIndex].id
+                    )}
                     target={"_blank"}
                     rel={"noreferrer"}
                   >
