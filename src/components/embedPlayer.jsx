@@ -18,8 +18,6 @@ const contentLink = (isTrack, id) => {
 };
 
 export default function EmbedPlayer(props) {
-  const progressBarRef = useRef(null);
-
   // Hydration fix for ReactPlayer & React 18
   const [hasWindow, setHasWindow] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,18 +25,10 @@ export default function EmbedPlayer(props) {
   const [viewForm, setViewForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [webLnAvailable, setWebLnAvailable] = useState(true);
-  const [width, setWidth] = useState(0);
   const [paymentRequest, setPaymentRequest] = useState("");
   const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
-
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const { reset } = useForm();
 
   useEffect(() => {
     if (typeof window != "undefined") {
@@ -47,18 +37,9 @@ export default function EmbedPlayer(props) {
     if (typeof window.webln === "undefined") {
       setWebLnAvailable(false);
     }
-    if (progressBarRef.current) {
-      setWidth(progressBarRef.current.offsetWidth);
-    }
   }, []);
 
   const reactPlayer = useRef();
-  const onSeekHandler = (event) => {
-    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
-    const clickXPosition = event.clientX - 12; // 12 pixels of padding + margin on the left
-    const targetSeek = clickXPosition / progressBarWidth;
-    reactPlayer.current.seekTo(targetSeek);
-  };
 
   const { trackData } = props;
 
@@ -126,17 +107,13 @@ export default function EmbedPlayer(props) {
             setCurrentTrackIndex={setCurrentTrackIndex}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}
-            progressBarRef={progressBarRef}
-            onSeekHandler={onSeekHandler}
             trackProgress={trackProgress}
             viewForm={viewForm}
             setViewForm={setViewForm}
             successMessage={successMessage}
             handleBoost={handleBoost}
-            handleSubmit={handleSubmit}
-            errors={errors}
             contentLink={contentLink}
-            register={register}
+            playerRef={reactPlayer}
           />
         </div>
       ) : (

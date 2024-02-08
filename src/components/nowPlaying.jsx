@@ -4,6 +4,7 @@ import EmbedForwardButton from "./embedForwardButton";
 import EmbedPlayButton from "./embedPlayButton";
 import { Transition } from "@headlessui/react";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
 
 export const NowPlaying = ({
   trackData,
@@ -11,18 +12,27 @@ export const NowPlaying = ({
   setCurrentTrackIndex,
   isPlaying,
   setIsPlaying,
-  progressBarRef,
-  onSeekHandler,
   trackProgress,
   viewForm,
   setViewForm,
   successMessage,
   handleBoost,
-  handleSubmit,
-  errors,
   contentLink,
-  register,
+  playerRef,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSeekHandler = (event) => {
+    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
+    const clickXPosition = event.clientX - 12; // 12 pixels of padding + margin on the left
+    const targetSeek = clickXPosition / progressBarWidth;
+    playerRef.current.seekTo(targetSeek);
+  };
+
   const trackDataLength = trackData.length - 1;
 
   return (
@@ -67,7 +77,7 @@ export const NowPlaying = ({
           <div
             className="h-3"
             id="progressBar"
-            ref={progressBarRef}
+            // ref={progressBarRef}
             onClick={onSeekHandler}
           >
             <div className="my-2 border-b-2 border-brand-pink pt-1" />
