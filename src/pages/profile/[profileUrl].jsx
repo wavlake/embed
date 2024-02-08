@@ -10,13 +10,13 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const { trackId } = context.params;
+  const { profileUrl } = context.params;
 
-  const result = await fetch(`${domain}/api/track?trackId=${trackId}`);
+  const result = await fetch(`${domain}/api/profile?profileUrl=${profileUrl}`);
 
   const data = await result.json();
 
-  return { props: { trackData: [data?.data] } };
+  return { props: { trackData: data }, revalidate: 3600 }; // revalidate every hour
 }
 
 export default function Embed(props) {

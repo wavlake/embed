@@ -10,13 +10,13 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const { trackId } = context.params;
+  const { podcastUrl } = context.params;
 
-  const result = await fetch(`${domain}/api/track?trackId=${trackId}`);
+  const result = await fetch(`${domain}/api/podcast?podcastUrl=${podcastUrl}`);
 
   const data = await result.json();
 
-  return { props: { trackData: [data?.data] } };
+  return { props: { trackData: data.data } };
 }
 
 export default function Embed(props) {

@@ -10,9 +10,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const { trackId } = context.params;
+  const { episodeId } = context.params;
 
-  const result = await fetch(`${domain}/api/track?trackId=${trackId}`);
+  const result = await fetch(`${domain}/api/episode?episodeId=${episodeId}`);
 
   const data = await result.json();
 

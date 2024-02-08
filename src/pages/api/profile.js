@@ -2,7 +2,7 @@ import catalogClient from "../../utils/catalogClient";
 
 export default async function handler(req, res) {
   await catalogClient
-    .get(`/tracks/${req.query.trackId}`)
+    .get(`/catalog/embed/tracks/${req.query.profileUrl}/profile`)
     .then(({ data }) => {
       res.status(200).json(data);
     })

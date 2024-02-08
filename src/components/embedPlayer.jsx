@@ -14,8 +14,16 @@ import ReactPlayer from "react-player";
 
 const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
 
+const contentLink = (isTrack, id) => {
+  if (isTrack) {
+    return `${shareUrl}/track/${id}`;
+  } else {
+    return `${shareUrl}/episode/${id}`;
+  }
+};
+
 export default function EmbedPlayer(props) {
-  const ref = useRef(null);
+  const progressBarRef = useRef(null);
 
   // Hydration fix for ReactPlayer & React 18
   const [hasWindow, setHasWindow] = useState(false);
@@ -44,10 +52,18 @@ export default function EmbedPlayer(props) {
     if (typeof window.webln === "undefined") {
       setWebLnAvailable(false);
     }
-    if (ref.current) {
-      setWidth(ref.current.offsetWidth);
+    if (progressBarRef.current) {
+      setWidth(progressBarRef.current.offsetWidth);
     }
   }, []);
+
+  const reactPlayer = useRef();
+  const onSeekHandler = (event) => {
+    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
+    const clickXPosition = event.clientX - 12; // 12 pixels of padding + margin on the left
+    const targetSeek = clickXPosition / progressBarWidth;
+    reactPlayer.current.seekTo(targetSeek);
+  };
 
   const { trackData } = props;
 
@@ -115,7 +131,10 @@ export default function EmbedPlayer(props) {
             {/* IMAGE CONTAINER */}
             <div className="row-span-2 mx-auto my-2 flex justify-start px-2 xs:my-auto">
               <Image
-                src={trackData[currentTrackIndex].artworkUrl}
+                src={
+                  trackData[currentTrackIndex].artworkUrl ||
+                  trackData[currentTrackIndex].podcast?.artworkUrl
+                }
                 // layout={'fixed'}
                 width={200}
                 height={200}
@@ -127,7 +146,10 @@ export default function EmbedPlayer(props) {
               {/* ROW 1 */}
               <div className="row-span-1 mt-1 tracking-tighter text-white">
                 <a
-                  href={`${shareUrl}/track/${trackData[currentTrackIndex].id}`}
+                  href={contentLink(
+                    trackData[currentTrackIndex].podcast === undefined,
+                    trackData[currentTrackIndex].id
+                  )}
                   target={"_blank"}
                   rel={"noreferrer"}
                   className="flex items-center"
@@ -137,13 +159,23 @@ export default function EmbedPlayer(props) {
                   </p>
                 </a>
                 <p className="mt-1 flex text-xs">
-                  by {trackData[currentTrackIndex].artist}
+                  by{" "}
+                  {trackData[currentTrackIndex].artist ||
+                    trackData[currentTrackIndex].podcast?.name ||
+                    trackData[currentTrackIndex].podcast}
                 </p>
                 {/* PROGRESS BAR */}
-                <div className="my-2 border-b-2 border-brand-pink" ref={ref} />
+                <div
+                  className="h-3"
+                  id="progressBar"
+                  ref={progressBarRef}
+                  onClick={onSeekHandler}
+                >
+                  <div className="my-2 border-b-2 border-brand-pink pt-1" />
+                </div>
                 {/* Overlay */}
                 <div
-                  className="relative z-10 -translate-y-2.5 border-b-2 border-brand-pink-dark"
+                  className="relative z-10 -translate-y-2 border-b-2 border-brand-pink-dark"
                   style={{
                     width: `${trackProgress}%`,
                     transitionProperty: "width",
@@ -218,7 +250,10 @@ export default function EmbedPlayer(props) {
                 </div>
                 <div className="col-span-2 flex cursor-pointer justify-self-end">
                   <a
-                    href={`${shareUrl}/track/${trackData[currentTrackIndex].id}`}
+                    href={contentLink(
+                      trackData[currentTrackIndex].podcast === undefined,
+                      trackData[currentTrackIndex].id
+                    )}
                     target={"_blank"}
                     rel={"noreferrer"}
                   >
@@ -244,6 +279,7 @@ export default function EmbedPlayer(props) {
       )}
       {hasWindow && trackData.length > 0 && (
         <ReactPlayer
+          ref={reactPlayer}
           controls={false}
           url={trackData[currentTrackIndex].liveUrl}
           playing={isPlaying}
