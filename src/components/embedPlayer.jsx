@@ -3,19 +3,10 @@ import { checkInvoice, getInvoice } from "../utils/provider";
 import FundingInvoiceModal from "./fundingInvoiceModal";
 import NoExist from "./noExist";
 import { NowPlaying } from "./nowPlaying";
+import { TrackList } from "./trackList";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactPlayer from "react-player";
-
-const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
-
-const contentLink = (isTrack, id) => {
-  if (isTrack) {
-    return `${shareUrl}/track/${id}`;
-  } else {
-    return `${shareUrl}/episode/${id}`;
-  }
-};
 
 export default function EmbedPlayer(props) {
   // Hydration fix for ReactPlayer & React 18
@@ -41,7 +32,7 @@ export default function EmbedPlayer(props) {
 
   const reactPlayer = useRef();
 
-  const { trackData } = props;
+  const { trackData, isPlaylist = false } = props;
 
   async function handleBoost(data) {
     try {
@@ -89,37 +80,35 @@ export default function EmbedPlayer(props) {
     }
   }
 
-  return (
+  return trackData.length > 0 ? (
     <>
-      {trackData.length > 0 ? (
-        <div>
-          <div className="absolute top-1 left-0 right-1 z-20 m-auto">
-            <FundingInvoiceModal
-              reset={reset}
-              isInvoiceOpen={isInvoiceOpen}
-              setIsInvoiceOpen={setIsInvoiceOpen}
-              paymentRequest={paymentRequest}
-            />
-          </div>
-          <NowPlaying
-            trackData={trackData}
-            currentTrackIndex={currentTrackIndex}
-            setCurrentTrackIndex={setCurrentTrackIndex}
-            isPlaying={isPlaying}
-            setIsPlaying={setIsPlaying}
-            trackProgress={trackProgress}
-            viewForm={viewForm}
-            setViewForm={setViewForm}
-            successMessage={successMessage}
-            handleBoost={handleBoost}
-            contentLink={contentLink}
-            playerRef={reactPlayer}
-          />
-        </div>
-      ) : (
-        <NoExist />
-      )}
-      {hasWindow && trackData.length > 0 && (
+      <div className="absolute top-1 left-0 right-1 z-20 m-auto">
+        <FundingInvoiceModal
+          reset={reset}
+          isInvoiceOpen={isInvoiceOpen}
+          setIsInvoiceOpen={setIsInvoiceOpen}
+          paymentRequest={paymentRequest}
+        />
+      </div>
+      <div className="flex max-w-3xl flex-col gap-8 rounded-3xl bg-brand-black p-4 text-white">
+        <NowPlaying
+          trackData={trackData}
+          currentTrackIndex={currentTrackIndex}
+          setCurrentTrackIndex={setCurrentTrackIndex}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          trackProgress={trackProgress}
+          viewForm={viewForm}
+          setViewForm={setViewForm}
+          successMessage={successMessage}
+          handleBoost={handleBoost}
+          playerRef={reactPlayer}
+        />
+        {trackData.length > 1 && (
+          <TrackList trackData={trackData} isPlaylist={isPlaylist} />
+        )}
+      </div>
+      {hasWindow && (
         <ReactPlayer
           ref={reactPlayer}
           controls={false}
@@ -133,5 +122,7 @@ export default function EmbedPlayer(props) {
         />
       )}
     </>
+  ) : (
+    <NoExist />
   );
 }

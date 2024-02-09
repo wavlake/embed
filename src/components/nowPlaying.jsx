@@ -6,6 +6,144 @@ import { Transition } from "@headlessui/react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
+const shareUrl = process.env.NEXT_PUBLIC_DOMAIN_URL;
+
+const contentLink = (isTrack, id) => {
+  if (isTrack) {
+    return `${shareUrl}/track/${id}`;
+  } else {
+    return `${shareUrl}/episode/${id}`;
+  }
+};
+
+const parentContentLink = (isTrack, id) => {
+  if (isTrack) {
+    return `${shareUrl}/${id}`;
+  } else {
+    return `${shareUrl}/podcast/${id}`;
+  }
+};
+
+const ContentMetadata = ({ activeContent }) => {
+  return (
+    <div className="flex grow flex-col">
+      <a
+        href={contentLink(
+          activeContent.podcast === undefined,
+          activeContent.id
+        )}
+        target={"_blank"}
+        rel={"noreferrer"}
+        className="max-w-fit hover:text-brand-pink"
+      >
+        <p className="text-md font-semibold">{activeContent.title}</p>
+      </a>
+      <a
+        className="max-w-fit text-sm underline hover:text-brand-pink"
+        href={parentContentLink(
+          activeContent.podcast === undefined,
+          activeContent.artistUrl || activeContent.podcast?.url
+        )}
+        target={"_blank"}
+        rel={"noreferrer"}
+      >
+        {activeContent.artist ||
+          activeContent.podcast?.name ||
+          activeContent.podcast}
+      </a>
+    </div>
+  );
+};
+
+const BoostButton = ({}) => {
+  return (
+    <button
+      className="rounded-full fill-brand-pink transition hover:fill-brand-pink-light"
+      type="submit"
+    >
+      <BoostIcon className="h-8" />
+    </button>
+  );
+};
+
+const Logo = ({ activeContent }) => {
+  return (
+    <a
+      href={contentLink(activeContent.podcast === undefined, activeContent.id)}
+      target={"_blank"}
+      rel={"noreferrer"}
+    >
+      <LogoIcon className="h-7 fill-white" />
+    </a>
+  );
+};
+
+// This is determined by guess and check
+// Click the progress bar and see where the progress jumps to, adjust as needed
+const PROGRESS_BAR_CLICK_OFFSET = 180;
+
+const ProgressBar = ({ trackProgress, playerRef }) => {
+  const onSeekHandler = ({ clientX }) => {
+    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
+    const clickXPosition = clientX - PROGRESS_BAR_CLICK_OFFSET;
+    const targetSeek = clickXPosition / progressBarWidth;
+    playerRef.current.seekTo(targetSeek);
+  };
+
+  return (
+    <button
+      className="relative flex h-3 grow flex-col justify-center"
+      id="progressBar"
+      onClick={onSeekHandler}
+    >
+      <div className="h-0.5 w-full rounded-sm bg-brand-pink" />
+      <div
+        className={`absolute z-10 h-0.5 rounded-sm bg-brand-pink-dark`}
+        style={{
+          width: `${trackProgress}%`,
+          transitionProperty: "width",
+          transitionDuration: "0.5s",
+          transitionTimingFunction: "linear",
+        }}
+      />
+    </button>
+  );
+};
+
+const Controls = ({ playerRef, trackProgress, multiTrack }) => {
+  return (
+    <div className="flex h-10 grow flex-row items-center gap-2">
+      <button
+        onClick={() => {
+          if (multiTrack && currentTrackIndex > 0) {
+            // move to previous track, unless we're on index 0
+            setCurrentTrackIndex(currentTrackIndex - 1);
+          } else {
+            // single track, restart track
+            playerRef.current.seekTo(0);
+          }
+        }}
+        className="rotate-180 hover:text-brand-pink"
+      >
+        <EmbedForwardButton />
+      </button>
+      <ProgressBar trackProgress={trackProgress} playerRef={playerRef} />
+      {multiTrack && (
+        <button
+          className="hover:text-brand-pink"
+          onClick={() => {
+            if (currentTrackIndex < trackDataLength) {
+              setCurrentTrackIndex(currentTrackIndex + 1);
+            }
+          }}
+        >
+          <EmbedForwardButton />
+        </button>
+      )}
+    </div>
+  );
+};
+
 export const NowPlaying = ({
   trackData,
   currentTrackIndex,
@@ -17,168 +155,92 @@ export const NowPlaying = ({
   setViewForm,
   successMessage,
   handleBoost,
-  contentLink,
   playerRef,
 }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const onSeekHandler = (event) => {
-    const progressBarWidth = document.getElementById("progressBar").offsetWidth;
-    const clickXPosition = event.clientX - 12; // 12 pixels of padding + margin on the left
-    const targetSeek = clickXPosition / progressBarWidth;
-    playerRef.current.seekTo(targetSeek);
-  };
-
-  const trackDataLength = trackData.length - 1;
-
+  const activeContent = trackData[currentTrackIndex];
   return (
-    <div className="grid max-w-xl grid-cols-1 grid-rows-2 space-x-1 space-y-1 rounded-xl bg-brand-black xs:grid-rows-3">
-      {/* IMAGE CONTAINER */}
-      <div className="row-span-2 mx-auto my-2 flex justify-start px-2 xs:my-auto">
+    <div className="flex w-full flex-row items-start gap-3 rounded-3xl bg-neutral-800 px-4 pt-4">
+      <a
+        href={contentLink(
+          activeContent.podcast === undefined,
+          activeContent.id
+        )}
+        target={"_blank"}
+        rel={"noreferrer"}
+        className="pb-3"
+      >
         <Image
-          src={
-            trackData[currentTrackIndex].artworkUrl ||
-            trackData[currentTrackIndex].podcast?.artworkUrl
-          }
-          // layout={'fixed'}
-          width={200}
-          height={200}
+          src={activeContent.artworkUrl || activeContent.podcast?.artworkUrl}
+          width={70}
+          height={70}
+        />
+      </a>
+      <EmbedPlayButton
+        clickHandler={() => setIsPlaying(!isPlaying)}
+        isPlaying={isPlaying}
+      />
+      <div className="flex grow flex-col">
+        <div className="flex flex-row items-start">
+          <ContentMetadata activeContent={activeContent} />
+          <BoostButton />
+          <Logo activeContent={activeContent} />
+        </div>
+        <Controls
+          playerRef={playerRef}
+          trackProgress={trackProgress}
+          multiTrack={trackData.length > 1}
         />
       </div>
-
-      {/* TRACK METADATA & CONTROLS */}
-      <div className="row-span-1 grid grid-rows-1 px-2 pb-3">
-        {/* ROW 1 */}
-        <div className="row-span-1 mt-1 tracking-tighter text-white">
-          <a
-            href={contentLink(
-              trackData[currentTrackIndex].podcast === undefined,
-              trackData[currentTrackIndex].id
-            )}
-            target={"_blank"}
-            rel={"noreferrer"}
-            className="flex items-center"
-          >
-            <p className="text-sm font-semibold">
-              {trackData[currentTrackIndex].title}
-            </p>
-          </a>
-          <p className="mt-1 flex text-xs">
-            by{" "}
-            {trackData[currentTrackIndex].artist ||
-              trackData[currentTrackIndex].podcast?.name ||
-              trackData[currentTrackIndex].podcast}
-          </p>
-          {/* PROGRESS BAR */}
-          <div
-            className="h-3"
-            id="progressBar"
-            // ref={progressBarRef}
-            onClick={onSeekHandler}
-          >
-            <div className="my-2 border-b-2 border-brand-pink pt-1" />
-          </div>
-          {/* Overlay */}
-          <div
-            className="relative z-10 -translate-y-2 border-b-2 border-brand-pink-dark"
-            style={{
-              width: `${trackProgress}%`,
-              transitionProperty: "width",
-              transitionDuration: "0.5s",
-              transitionTimingFunction: "linear",
-            }}
-          />
-        </div>
-
-        {/* ROW 2 */}
-        <div className="row-span-1 grid grid-cols-7 items-center">
-          <div className="col-span-1 flex items-center justify-self-start">
-            <div onClick={() => setIsPlaying(!isPlaying)}>
-              <EmbedPlayButton isPlaying={isPlaying} />
-            </div>
-            {trackData.length > 1 && (
-              <div
-                onClick={() => {
-                  if (currentTrackIndex < trackDataLength) {
-                    setCurrentTrackIndex(currentTrackIndex + 1);
-                  }
-                }}
-              >
-                <EmbedForwardButton />
-              </div>
-            )}
-          </div>
-          <Transition
-            show={viewForm}
-            enter="transition-opacity duration-200"
-            enterFrom="opacity-0 -translate-x-20"
-            enterTo="opacity-100"
-            className="col-span-4"
-          >
-            <div className="">
-              <form
-                className="flex items-center"
-                onSubmit={handleSubmit((data) =>
-                  handleBoost({
-                    ...data,
-                    trackId: trackData[currentTrackIndex].id,
-                  })
-                )}
-              >
-                <input
-                  className="flex w-10 rounded-md px-2 text-sm tracking-tight focus:accent-brand-pink"
-                  defaultValue="1"
-                  {...register("amount", {
-                    required: true,
-                    pattern: /[1234567890]/,
-                  })}
-                />
-                {errors.amount && (
-                  <span className="flex text-xs text-red-700">Required</span>
-                )}
-                <p className="ml-1 flex text-xs tracking-tight text-white">
-                  sats
-                </p>
-                <button type="submit">
-                  <BoostIcon className="h-9 cursor-pointer fill-brand-pink hover:fill-brand-pink-light" />
-                </button>
-              </form>
-            </div>
-          </Transition>
-          <div
-            className={`${!viewForm ? "col-span-4 flex" : "hidden"}`}
-            onClick={() => setViewForm(!viewForm)}
-          >
-            <BoostIcon className="h-9 cursor-pointer fill-brand-black-light hover:fill-brand-pink-light" />
-          </div>
-          <div className="col-span-2 flex cursor-pointer justify-self-end">
-            <a
-              href={contentLink(
-                trackData[currentTrackIndex].podcast === undefined,
-                trackData[currentTrackIndex].id
-              )}
-              target={"_blank"}
-              rel={"noreferrer"}
-            >
-              <LogoIcon className="flex h-8 fill-white" />
-            </a>
-          </div>
-          <Transition
-            show={!viewForm}
-            enter="transition-opacity duration-200"
-            enterFrom="opacity-0 translate-x-20"
-            enterTo="opacity-100"
-          >
-            <div className="flex whitespace-nowrap text-xs italic tracking-tighter text-white">
-              <p>{successMessage}</p>
-            </div>
-          </Transition>
-        </div>
-      </div>
     </div>
+  );
+};
+
+const Forms = () => {
+  return (
+    <>
+      <Transition
+        show={viewForm}
+        enter="transition-opacity duration-200"
+        enterFrom="opacity-0 -translate-x-20"
+        enterTo="opacity-100"
+        className="col-span-4"
+      >
+        <div className="">
+          <form
+            className="flex items-center"
+            onSubmit={handleSubmit((data) =>
+              handleBoost({
+                ...data,
+                trackId: trackData[currentTrackIndex].id,
+              })
+            )}
+          >
+            <input
+              className="flex w-10 rounded-md px-2 text-sm tracking-tight focus:accent-brand-pink"
+              defaultValue="1"
+              {...register("amount", {
+                required: true,
+                pattern: /[1234567890]/,
+              })}
+            />
+            {errors.amount && (
+              <span className="flex text-xs text-red-700">Required</span>
+            )}
+            <p className="ml-1 flex text-xs tracking-tight text-white">sats</p>
+            <BoostButton />
+          </form>
+        </div>
+      </Transition>
+      <Transition
+        show={!viewForm}
+        enter="transition-opacity duration-200"
+        enterFrom="opacity-0 translate-x-20"
+        enterTo="opacity-100"
+      >
+        <div className="flex whitespace-nowrap text-xs italic tracking-tighter text-white">
+          <p>{successMessage}</p>
+        </div>
+      </Transition>
+    </>
   );
 };
