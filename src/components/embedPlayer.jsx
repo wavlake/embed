@@ -1,5 +1,7 @@
 import poll from "../utils/poll";
 import { checkInvoice, getInvoice } from "../utils/provider";
+import { BoostForm } from "./boostForm";
+import { FlipCard } from "./flipCard";
 import FundingInvoiceModal from "./fundingInvoiceModal";
 import NoExist from "./noExist";
 import { NowPlaying } from "./nowPlaying";
@@ -84,39 +86,39 @@ export default function EmbedPlayer(props) {
   }
 
   return trackData.length > 0 ? (
-    <>
-      <div className="absolute top-1 left-0 right-1 z-20 m-auto">
-        <FundingInvoiceModal
-          reset={reset}
-          isInvoiceOpen={isInvoiceOpen}
-          setIsInvoiceOpen={setIsInvoiceOpen}
-          paymentRequest={paymentRequest}
-        />
-      </div>
-      <div className="flex max-w-3xl flex-col gap-8 rounded-3xl bg-brand-black p-4 tracking-tight text-white">
-        <form onSubmit={handleBoost}>
-          <NowPlaying
+    <div className="relative max-w-3xl tracking-tight text-white">
+      <FlipCard
+        isFlipped={viewForm}
+        frontComponent={
+          <div className="flex flex-col gap-8 rounded-3xl bg-brand-black p-4">
+            <NowPlaying
+              trackData={trackData}
+              currentTrackIndex={currentTrackIndex}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              trackProgress={trackProgress}
+              playerRef={reactPlayer}
+              openBoostForm={() => setViewForm(true)}
+            />
+            {trackData.length > 1 && (
+              <TrackList
+                setCurrentTrackIndex={setCurrentTrackIndex}
+                trackData={trackData}
+                isPlaylist={isPlaylist}
+              />
+            )}
+          </div>
+        }
+        backComponent={
+          <BoostForm
+            isOpen={viewForm}
             trackData={trackData}
             currentTrackIndex={currentTrackIndex}
-            setCurrentTrackIndex={setCurrentTrackIndex}
-            isPlaying={isPlaying}
-            setIsPlaying={setIsPlaying}
-            trackProgress={trackProgress}
-            viewForm={viewForm}
-            setViewForm={setViewForm}
             successMessage={successMessage}
-            handleBoost={handleBoost}
-            playerRef={reactPlayer}
+            backToPlayer={() => setViewForm(false)}
           />
-        </form>
-        {trackData.length > 1 && (
-          <TrackList
-            setCurrentTrackIndex={setCurrentTrackIndex}
-            trackData={trackData}
-            isPlaylist={isPlaylist}
-          />
-        )}
-      </div>
+        }
+      />
       {hasWindow && (
         <ReactPlayer
           ref={reactPlayer}
@@ -130,7 +132,7 @@ export default function EmbedPlayer(props) {
           }}
         />
       )}
-    </>
+    </div>
   ) : (
     <NoExist />
   );

@@ -7,11 +7,12 @@ import {
 } from "./nowPlayingMetadata";
 import { PlayerControls } from "./playerControls";
 
-const BoostButton = ({}) => {
+const BoostButton = ({ onClick }) => {
   return (
     <button
       className="rounded-full fill-white transition hover:fill-brand-pink"
-      type="submit"
+      type="button"
+      onClick={onClick}
     >
       <CommentIcon className="h-8 translate-y-[-3px]" />
     </button>
@@ -21,15 +22,11 @@ const BoostButton = ({}) => {
 export const NowPlaying = ({
   trackData,
   currentTrackIndex,
-  setCurrentTrackIndex,
   isPlaying,
   setIsPlaying,
   trackProgress,
-  viewForm,
-  setViewForm,
-  successMessage,
-  handleBoost,
   playerRef,
+  openBoostForm,
 }) => {
   const activeContent = trackData[currentTrackIndex];
   return (
@@ -42,7 +39,7 @@ export const NowPlaying = ({
       <div className="flex grow flex-col">
         <div className="flex flex-row items-start gap-2">
           <NowPlayingMetadata activeContent={activeContent} />
-          <BoostButton />
+          <BoostButton onClick={openBoostForm} />
           <Logo activeContent={activeContent} />
         </div>
         <PlayerControls
