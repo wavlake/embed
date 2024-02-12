@@ -105,7 +105,11 @@ export default function EmbedPlayer(props) {
           playerRef={reactPlayer}
         />
         {trackData.length > 1 && (
-          <TrackList trackData={trackData} isPlaylist={isPlaylist} />
+          <TrackList
+            setCurrentTrackIndex={setCurrentTrackIndex}
+            trackData={trackData}
+            isPlaylist={isPlaylist}
+          />
         )}
       </div>
       {hasWindow && (
