@@ -20,7 +20,9 @@ const Track = ({ track, isPlaylist, order, onClick }) => {
           <p className="text-sm text-gray-500">{track.artist}</p>
         </div>
       )}
-      <div className="pr-2 text-gray-500">{formatSeconds(track.duration)}</div>
+      <div className="w-11 pr-2 text-gray-500">
+        {formatSeconds(track.duration)}
+      </div>
     </div>
   );
 };
