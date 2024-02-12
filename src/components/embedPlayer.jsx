@@ -1,13 +1,9 @@
-import poll from "../utils/poll";
-import { checkInvoice, getInvoice } from "../utils/provider";
 import { BoostForm } from "./boostForm";
 import { FlipCard } from "./flipCard";
-import FundingInvoiceModal from "./fundingInvoiceModal";
 import NoExist from "./noExist";
 import { NowPlaying } from "./nowPlaying";
 import { TrackList } from "./trackList";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import ReactPlayer from "react-player";
 
 export default function EmbedPlayer(props) {
@@ -16,74 +12,15 @@ export default function EmbedPlayer(props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
   const [viewForm, setViewForm] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [webLnAvailable, setWebLnAvailable] = useState(true);
-  const [paymentRequest, setPaymentRequest] = useState("");
-  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const { reset } = useForm();
+  const reactPlayer = useRef();
+  const { trackData, isPlaylist = false } = props;
 
   useEffect(() => {
     if (typeof window != "undefined") {
       setHasWindow(true);
     }
-    if (typeof window.webln === "undefined") {
-      setWebLnAvailable(false);
-    }
   }, []);
-
-  const reactPlayer = useRef();
-
-  const { trackData, isPlaylist = false } = props;
-
-  async function handleBoost(event) {
-    // prevent form submission and page reload
-    event.preventDefault();
-
-    try {
-      const result = await getInvoice(data);
-
-      const resultJson = await result.json();
-
-      const paymentRequest = resultJson.payment_request;
-      const paymentHash = resultJson.payment_hash;
-
-      if (webLnAvailable) {
-        try {
-          await webln.enable();
-          const result = await window.webln.sendPayment(paymentRequest);
-          if (result.preimage) {
-            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-            setViewForm(false);
-            reset();
-          }
-        } catch (err) {
-          alert(err);
-        }
-      } else {
-        setPaymentRequest(paymentRequest);
-        setIsInvoiceOpen(true);
-        poll({
-          fn: checkInvoice,
-          data: { paymentHash: paymentHash },
-          interval: 12000,
-          maxAttempts: 12,
-        })
-          .then(() => {
-            setIsInvoiceOpen(false);
-            setViewForm(false);
-            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-            reset();
-          })
-          .catch(() => {
-            setIsInvoiceOpen(false);
-            setViewForm(false);
-          });
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   return trackData.length > 0 ? (
     <div className="relative max-w-3xl tracking-tight text-white">
@@ -112,10 +49,7 @@ export default function EmbedPlayer(props) {
         }
         backComponent={
           <BoostForm
-            isOpen={viewForm}
-            trackData={trackData}
-            currentTrackIndex={currentTrackIndex}
-            successMessage={successMessage}
+            contentId={trackData[currentTrackIndex]?.id}
             backToPlayer={() => setViewForm(false)}
           />
         }

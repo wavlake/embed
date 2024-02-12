@@ -1,5 +1,8 @@
 import BoostIcon from "../icons/BOOST.svg";
+import poll from "../utils/poll";
+import { checkInvoice, getInvoice } from "../utils/provider";
 import { TextInput } from "./textInput";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 const BoostButton = () => {
@@ -14,25 +17,71 @@ const BoostButton = () => {
   );
 };
 
-export const BoostForm = ({
-  isOpen,
-  trackData,
-  currentTrackIndex,
-  successMessage,
-  backToPlayer,
-}) => {
-  const onSubmit = (data) => {
-    console.log({ data });
-    // handleSubmit((data) =>
-    //           handleBoost({
-    //             ...data,
-    //             trackId: trackData[currentTrackIndex].id,
-    //           })
-    //         )
+export const BoostForm = ({ contentId, backToPlayer }) => {
+  const [webLnAvailable, setWebLnAvailable] = useState(true);
+
+  useEffect(() => {
+    if (typeof window.webln === "undefined") {
+      setWebLnAvailable(false);
+    }
+  }, []);
+
+  const onSubmit = async (data) => {
+    const payload = {
+      trackId: contentId,
+      amount: data.amount,
+      type: "boost",
+      metadata: {},
+    };
+
+    try {
+      const result = await getInvoice(payload);
+
+      const resultJson = await result.json();
+
+      const paymentRequest = resultJson.payment_request;
+      const paymentHash = resultJson.payment_hash;
+
+      if (webLnAvailable) {
+        try {
+          await webln.enable();
+          const result = await window.webln.sendPayment(paymentRequest);
+          if (result.preimage) {
+            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
+            setViewForm(false);
+            reset();
+          }
+        } catch (err) {
+          alert(err);
+        }
+      } else {
+        setPaymentRequest(paymentRequest);
+        setIsInvoiceOpen(true);
+        poll({
+          fn: checkInvoice,
+          data: { paymentHash: paymentHash },
+          interval: 12000,
+          maxAttempts: 12,
+        })
+          .then(() => {
+            setIsInvoiceOpen(false);
+            setViewForm(false);
+            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
+            reset();
+          })
+          .catch(() => {
+            setIsInvoiceOpen(false);
+            setViewForm(false);
+          });
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
+
   const methods = useForm({
     defaultValues: {
-      sats: undefined,
+      amount: undefined,
       comment: undefined,
     },
   });
@@ -52,7 +101,7 @@ export const BoostForm = ({
           onSubmit={methods.handleSubmit(onSubmit)}
         >
           <TextInput
-            fieldName="sats"
+            fieldName="amount"
             type="number"
             title="Amount (sats)"
             helperText="Min 1 sat, max 100,000 sats"
