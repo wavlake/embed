@@ -32,7 +32,14 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
   );
 };
 
-export const PlayerControls = ({ playerRef, trackProgress, multiTrack }) => {
+export const PlayerControls = ({
+  playerRef,
+  trackProgress,
+  multiTrack,
+  currentTrackIndex,
+  trackDataLength,
+  setCurrentTrackIndex,
+}) => {
   return (
     <div className="flex h-10 grow flex-row items-center gap-2">
       <button
@@ -54,7 +61,7 @@ export const PlayerControls = ({ playerRef, trackProgress, multiTrack }) => {
         <button
           className="hover:text-brand-pink"
           onClick={() => {
-            if (currentTrackIndex < trackDataLength) {
+            if (currentTrackIndex < trackDataLength - 1) {
               setCurrentTrackIndex(currentTrackIndex + 1);
             }
           }}

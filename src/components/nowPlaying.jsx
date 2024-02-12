@@ -27,6 +27,7 @@ export const NowPlaying = ({
   trackProgress,
   playerRef,
   openBoostForm,
+  setCurrentTrackIndex,
 }) => {
   const activeContent = trackData[currentTrackIndex];
   return (
@@ -46,6 +47,9 @@ export const NowPlaying = ({
           playerRef={playerRef}
           trackProgress={trackProgress}
           multiTrack={trackData.length > 1}
+          currentTrackIndex={currentTrackIndex}
+          trackDataLength={trackData.length}
+          setCurrentTrackIndex={setCurrentTrackIndex}
         />
       </div>
     </div>

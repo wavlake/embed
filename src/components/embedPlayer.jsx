@@ -99,6 +99,7 @@ export default function EmbedPlayer(props) {
               trackProgress={trackProgress}
               playerRef={reactPlayer}
               openBoostForm={() => setViewForm(true)}
+              setCurrentTrackIndex={setCurrentTrackIndex}
             />
             {trackData.length > 1 && (
               <TrackList
