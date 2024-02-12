@@ -8,7 +8,7 @@ const formatSeconds = (duration) => {
 const Track = ({ track, isPlaylist, order, onClick }) => {
   return (
     <div
-      className="text-md box-content flex py-1 px-2 hover:cursor-pointer hover:rounded-md hover:bg-neutral-800"
+      className="text-md box-content flex py-1 px-2 transition hover:cursor-pointer hover:rounded-md hover:bg-neutral-800"
       onClick={onClick}
     >
       <div className="w-8">{order}.</div>

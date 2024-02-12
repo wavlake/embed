@@ -36,12 +36,12 @@ const ContentMetadata = ({ activeContent }) => {
         )}
         target={"_blank"}
         rel={"noreferrer"}
-        className="max-w-fit hover:text-brand-pink"
+        className="max-w-fit transition hover:text-brand-pink"
       >
         <p className="text-md font-semibold">{activeContent.title}</p>
       </a>
       <a
-        className="max-w-fit text-sm underline hover:text-brand-pink"
+        className="max-w-fit text-sm underline transition hover:text-brand-pink"
         href={parentContentLink(
           activeContent.podcast === undefined,
           activeContent.artistUrl || activeContent.podcast?.url
@@ -60,7 +60,7 @@ const ContentMetadata = ({ activeContent }) => {
 const BoostButton = ({}) => {
   return (
     <button
-      className="rounded-full fill-white transition hover:fill-brand-pink-light"
+      className="rounded-full fill-white transition hover:fill-brand-pink"
       type="submit"
     >
       <CommentIcon className="mt-[-3px] h-8" />
@@ -74,9 +74,12 @@ const Logo = ({ activeContent }) => {
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
       target={"_blank"}
       rel={"noreferrer"}
-      className="w-10"
+      className="w-10 "
     >
-      <LogoIcon className="h-7 w-10 fill-white" viewBox="0 0 1200 1200" />
+      <LogoIcon
+        className="h-7 w-10 fill-white transition hover:fill-brand-pink"
+        viewBox="0 0 1200 1200"
+      />
     </a>
   );
 };
