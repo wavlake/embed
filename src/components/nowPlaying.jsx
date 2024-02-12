@@ -28,7 +28,8 @@ const parentContentLink = (isTrack, id) => {
 
 const ContentMetadata = ({ activeContent }) => {
   return (
-    <div className="flex grow flex-col">
+    // translate-y by -5px so the text aligns with the album art
+    <div className="flex grow translate-y-[-5px] flex-col">
       <a
         href={contentLink(
           activeContent.podcast === undefined,
@@ -36,9 +37,9 @@ const ContentMetadata = ({ activeContent }) => {
         )}
         target={"_blank"}
         rel={"noreferrer"}
-        className="max-w-fit transition hover:text-brand-pink"
+        className="text-md max-w-fit font-semibold transition hover:text-brand-pink"
       >
-        <p className="text-md font-semibold">{activeContent.title}</p>
+        {activeContent.title}
       </a>
       <a
         className="max-w-fit text-sm underline transition hover:text-brand-pink"
@@ -186,7 +187,7 @@ export const NowPlaying = ({
         isPlaying={isPlaying}
       />
       <div className="flex grow flex-col">
-        <div className="flex flex-row items-start">
+        <div className="flex flex-row items-start gap-2">
           <ContentMetadata activeContent={activeContent} />
           <BoostButton />
           <Logo activeContent={activeContent} />

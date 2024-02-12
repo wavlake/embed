@@ -90,7 +90,7 @@ export default function EmbedPlayer(props) {
           paymentRequest={paymentRequest}
         />
       </div>
-      <div className="flex max-w-3xl flex-col gap-8 rounded-3xl bg-brand-black p-4 text-white">
+      <div className="flex max-w-3xl flex-col gap-8 rounded-3xl bg-brand-black p-4 tracking-tight text-white">
         <NowPlaying
           trackData={trackData}
           currentTrackIndex={currentTrackIndex}
