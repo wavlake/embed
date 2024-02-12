@@ -29,7 +29,7 @@ const parentContentLink = (isTrack, id) => {
 const ContentMetadata = ({ activeContent }) => {
   return (
     // translate-y by -5px so the text aligns with the album art
-    <div className="flex grow translate-y-[-5px] flex-col">
+    <div className="flex grow translate-y-[-4px] flex-col">
       <a
         href={contentLink(
           activeContent.podcast === undefined,
@@ -64,7 +64,7 @@ const BoostButton = ({}) => {
       className="rounded-full fill-white transition hover:fill-brand-pink"
       type="submit"
     >
-      <CommentIcon className="mt-[-3px] h-8" />
+      <CommentIcon className="h-8 translate-y-[-3px]" />
     </button>
   );
 };
