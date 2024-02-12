@@ -34,7 +34,10 @@ export default function EmbedPlayer(props) {
 
   const { trackData, isPlaylist = false } = props;
 
-  async function handleBoost(data) {
+  async function handleBoost(event) {
+    // prevent form submission and page reload
+    event.preventDefault();
+
     try {
       const result = await getInvoice(data);
 
@@ -91,19 +94,21 @@ export default function EmbedPlayer(props) {
         />
       </div>
       <div className="flex max-w-3xl flex-col gap-8 rounded-3xl bg-brand-black p-4 tracking-tight text-white">
-        <NowPlaying
-          trackData={trackData}
-          currentTrackIndex={currentTrackIndex}
-          setCurrentTrackIndex={setCurrentTrackIndex}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          trackProgress={trackProgress}
-          viewForm={viewForm}
-          setViewForm={setViewForm}
-          successMessage={successMessage}
-          handleBoost={handleBoost}
-          playerRef={reactPlayer}
-        />
+        <form onSubmit={handleBoost}>
+          <NowPlaying
+            trackData={trackData}
+            currentTrackIndex={currentTrackIndex}
+            setCurrentTrackIndex={setCurrentTrackIndex}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            trackProgress={trackProgress}
+            viewForm={viewForm}
+            setViewForm={setViewForm}
+            successMessage={successMessage}
+            handleBoost={handleBoost}
+            playerRef={reactPlayer}
+          />
+        </form>
         {trackData.length > 1 && (
           <TrackList
             setCurrentTrackIndex={setCurrentTrackIndex}
