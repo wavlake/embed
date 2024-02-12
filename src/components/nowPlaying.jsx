@@ -1,4 +1,6 @@
+import BoostBareIcon from "../icons/BOOST-BARE.svg";
 import BoostIcon from "../icons/BOOST.svg";
+import CommentIcon from "../icons/COMMENT.svg";
 import LogoIcon from "../icons/LOGO.svg";
 import EmbedForwardButton from "./embedForwardButton";
 import EmbedPlayButton from "./embedPlayButton";
@@ -58,10 +60,10 @@ const ContentMetadata = ({ activeContent }) => {
 const BoostButton = ({}) => {
   return (
     <button
-      className="rounded-full fill-brand-pink transition hover:fill-brand-pink-light"
+      className="rounded-full fill-white transition hover:fill-brand-pink-light"
       type="submit"
     >
-      <BoostIcon className="h-8" />
+      <CommentIcon className="mt-[-3px] h-8" />
     </button>
   );
 };
@@ -72,15 +74,16 @@ const Logo = ({ activeContent }) => {
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
       target={"_blank"}
       rel={"noreferrer"}
+      className="w-10"
     >
-      <LogoIcon className="h-7 fill-white" />
+      <LogoIcon className="h-7 w-10 fill-white" viewBox="0 0 1200 1200" />
     </a>
   );
 };
 
 // This is determined by guess and check
 // Click the progress bar and see where the progress jumps to, adjust as needed
-const PROGRESS_BAR_CLICK_OFFSET = 180;
+const PROGRESS_BAR_CLICK_OFFSET = 190;
 
 const ProgressBar = ({ trackProgress, playerRef }) => {
   const onSeekHandler = ({ clientX }) => {
