@@ -101,7 +101,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
       </button>
       <FormProvider {...methods}>
         <form
-          className="flex flex-col items-center"
+          className="flex flex-col items-center gap-4"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
           <TextInput
