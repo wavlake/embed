@@ -14,7 +14,7 @@ export default function EmbedPlayer(props) {
   const [viewForm, setViewForm] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const reactPlayer = useRef();
-  const { trackData, isPlaylist = false } = props;
+  const { trackData } = props;
 
   useEffect(() => {
     if (typeof window != "undefined") {
@@ -23,7 +23,7 @@ export default function EmbedPlayer(props) {
   }, []);
 
   return trackData.length > 0 ? (
-    <div className="relative max-w-3xl tracking-tight text-white">
+    <div className="relative max-w-3xl tracking-tight text-white transition">
       <FlipCard
         isFlipped={viewForm}
         frontComponent={
@@ -42,7 +42,6 @@ export default function EmbedPlayer(props) {
               <TrackList
                 setCurrentTrackIndex={setCurrentTrackIndex}
                 trackData={trackData}
-                isPlaylist={isPlaylist}
               />
             )}
           </div>
@@ -60,6 +59,10 @@ export default function EmbedPlayer(props) {
           controls={false}
           url={trackData[currentTrackIndex].liveUrl}
           playing={isPlaying}
+          onPlay={() => {
+            console.log("onPlay handler");
+            !isPlaying && setIsPlaying(true);
+          }}
           height="0"
           width="0"
           onProgress={(progress) => {
