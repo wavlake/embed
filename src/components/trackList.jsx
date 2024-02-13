@@ -5,40 +5,40 @@ const formatSeconds = (duration) => {
   return `${minutes}:${seconds}`;
 };
 
-const Track = ({ track, isPlaylist, order, onClick }) => {
+const Track = ({ track, isMultiTrack, order, onClick }) => {
   return (
     <div
-      className="text-md box-content flex py-1 px-2 transition hover:cursor-pointer hover:rounded-md hover:bg-neutral-800"
+      className="text-md box-content flex gap-2 py-1 px-4 transition hover:cursor-pointer hover:rounded-md hover:bg-neutral-800"
       onClick={onClick}
     >
-      <div className="w-8">{order}.</div>
-      {isPlaylist ? (
-        <div className="grow">{track.title}</div>
-      ) : (
-        <div className="flex grow flex-col">
-          <p>{track.title}</p>
-          <p className="text-sm text-gray-500">{track.artist}</p>
-        </div>
-      )}
-      <div className="w-11 pr-2 text-gray-500">
+      <div className="min-w-7 w-7 flex-none">{order}.</div>
+      <div className="flex flex-grow flex-col overflow-hidden">
+        <p className="truncate">{track.title}</p>
+        {isMultiTrack && (
+          <p className="truncate text-sm text-gray-500">{track.artist}</p>
+        )}
+      </div>
+      <div className="min-w-10 w-10 flex-none text-left text-gray-500">
         {formatSeconds(track.duration)}
       </div>
     </div>
   );
 };
-export const TrackList = ({ trackData, isPlaylist, setCurrentTrackIndex }) => {
+
+export const TrackList = ({ trackData, setCurrentTrackIndex }) => {
   const onClick = (index) => {
     setCurrentTrackIndex(index);
   };
 
+  const isMultiTrack = trackData.length > 1;
   return (
-    <div className="flex max-h-96 flex-col overflow-y-scroll font-light">
+    <div className="flex max-h-96 flex-col overflow-y-auto font-light">
       {trackData.map((track, index) => (
         <Track
           key={track.id}
           order={index + 1}
           track={track}
-          isPlaylist={isPlaylist}
+          isMultiTrack={isMultiTrack}
           onClick={() => onClick(index)}
         />
       ))}
