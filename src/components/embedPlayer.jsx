@@ -23,11 +23,11 @@ export default function EmbedPlayer(props) {
   }, []);
 
   return trackData.length > 0 ? (
-    <div className="relative max-w-3xl tracking-tight text-white transition">
+    <div className="max-w-3xl tracking-tight text-white transition ">
       <FlipCard
         isFlipped={viewForm}
         frontComponent={
-          <div className="flex flex-col gap-8 rounded-3xl bg-brand-black p-4">
+          <div className="flex h-[380px] flex-col gap-8 rounded-3xl bg-brand-black p-4">
             <NowPlaying
               trackData={trackData}
               currentTrackIndex={currentTrackIndex}

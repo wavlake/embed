@@ -32,7 +32,7 @@ export const TrackList = ({ trackData, setCurrentTrackIndex }) => {
 
   const isMultiTrack = trackData.length > 1;
   return (
-    <div className="flex max-h-96 flex-col overflow-y-auto font-light">
+    <div className="flex h-full flex-col overflow-y-auto font-light">
       {trackData.map((track, index) => (
         <Track
           key={track.id}
