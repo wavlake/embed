@@ -1,6 +1,7 @@
 import BoostIcon from "../icons/BOOST.svg";
 import poll from "../utils/poll";
 import { checkInvoice, getInvoice } from "../utils/provider";
+import FundingInvoiceModal from "./fundingInvoiceModal";
 import { TextInput } from "./textInput";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -19,6 +20,8 @@ const BoostButton = () => {
 
 export const BoostForm = ({ contentId, backToPlayer }) => {
   const [webLnAvailable, setWebLnAvailable] = useState(true);
+  const [paymentRequest, setPaymentRequest] = useState("");
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window.webln === "undefined") {
@@ -31,7 +34,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
       trackId: contentId,
       amount: data.amount,
       type: "boost",
-      metadata: {},
+      // metadata: {},
     };
 
     try {
@@ -51,29 +54,30 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
             setViewForm(false);
             reset();
           }
+          return;
         } catch (err) {
-          alert(err);
+          // user cancelled WebLN
         }
-      } else {
-        setPaymentRequest(paymentRequest);
-        setIsInvoiceOpen(true);
-        poll({
-          fn: checkInvoice,
-          data: { paymentHash: paymentHash },
-          interval: 12000,
-          maxAttempts: 12,
-        })
-          .then(() => {
-            setIsInvoiceOpen(false);
-            setViewForm(false);
-            setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-            reset();
-          })
-          .catch(() => {
-            setIsInvoiceOpen(false);
-            setViewForm(false);
-          });
       }
+
+      setPaymentRequest(paymentRequest);
+      setIsInvoiceOpen(true);
+      poll({
+        fn: checkInvoice,
+        data: { paymentHash: paymentHash },
+        interval: 12000,
+        maxAttempts: 12,
+      })
+        .then(() => {
+          setIsInvoiceOpen(false);
+          setViewForm(false);
+          setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
+          reset();
+        })
+        .catch(() => {
+          setIsInvoiceOpen(false);
+          setViewForm(false);
+        });
     } catch (e) {
       console.error(e);
     }
@@ -133,6 +137,12 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
           <BoostButton />
         </form>
       </FormProvider>
+      <FundingInvoiceModal
+        reset={methods.reset}
+        isInvoiceOpen={isInvoiceOpen}
+        setIsInvoiceOpen={setIsInvoiceOpen}
+        paymentRequest={paymentRequest}
+      />
     </div>
   );
 };
