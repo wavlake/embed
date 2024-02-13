@@ -59,9 +59,14 @@ export default function EmbedPlayer(props) {
           controls={false}
           url={trackData[currentTrackIndex].liveUrl}
           playing={isPlaying}
+          // if the player play/pause state is toggled by something other than the play button
+          // we need to update the state to reflect that
+          // e.g. a keyboard shortcut play/pause button
           onPlay={() => {
-            console.log("onPlay handler");
             !isPlaying && setIsPlaying(true);
+          }}
+          onPause={() => {
+            isPlaying && setIsPlaying(false);
           }}
           height="0"
           width="0"
