@@ -8,10 +8,10 @@ const PROGRESS_BAR_CLICK_OFFSET = 190;
 const ProgressBar = ({ trackProgress, playerRef }) => {
   const progressBarRef = useRef(null);
 
-  const progressBarWidth = progressBarRef?.current?.offsetWidth ?? 0;
-  const progressPixels = (progressBarWidth * trackProgress) / 100 ?? 0;
-
   const onSeekHandler = ({ clientX }) => {
+    const progressBarWidth = progressBarRef?.current?.offsetWidth ?? 0;
+    if (progressBarWidth === 0) return;
+
     const clickXPosition = clientX - PROGRESS_BAR_CLICK_OFFSET;
     const targetSeek = clickXPosition / progressBarWidth;
     playerRef.current.seekTo(targetSeek);
@@ -33,10 +33,11 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
           transitionDuration: "0.5s",
           transitionTimingFunction: "linear",
         }}
-      />
-      <div
-        className={`z-11 absolute h-2 w-2 translate-x-[${progressPixels}px] hidden rounded-full bg-white group-hover:block`}
-      />
+      >
+        <div
+          className={`absolute top-[0.5px] right-[1px] hidden h-2 w-2 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white group-hover:block`}
+        />
+      </div>
     </button>
   );
 };
