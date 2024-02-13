@@ -18,9 +18,9 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
       id="progressBar"
       onClick={onSeekHandler}
     >
-      <div className="h-0.5 w-full rounded-sm bg-brand-pink" />
+      <div className="h-0.5 w-full rounded-sm bg-white" />
       <div
-        className={`absolute z-10 h-0.5 rounded-sm bg-brand-pink-dark`}
+        className={`absolute z-10 h-0.5 rounded-sm bg-gray-300`}
         style={{
           width: `${trackProgress}%`,
           transitionProperty: "width",
@@ -52,14 +52,14 @@ export const PlayerControls = ({
             playerRef.current.seekTo(0);
           }
         }}
-        className="rotate-180 hover:text-brand-pink"
+        className="rotate-180"
       >
         <EmbedForwardButton />
       </button>
       <ProgressBar trackProgress={trackProgress} playerRef={playerRef} />
       {multiTrack && (
         <button
-          className="hover:text-brand-pink"
+          className=""
           onClick={() => {
             if (currentTrackIndex < trackDataLength - 1) {
               setCurrentTrackIndex(currentTrackIndex + 1);

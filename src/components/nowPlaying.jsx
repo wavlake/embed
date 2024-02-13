@@ -9,11 +9,7 @@ import { PlayerControls } from "./playerControls";
 
 const BoostButton = ({ onClick }) => {
   return (
-    <button
-      className="rounded-full fill-white transition hover:fill-brand-pink"
-      type="button"
-      onClick={onClick}
-    >
+    <button className="rounded-full fill-white" type="button" onClick={onClick}>
       <CommentIcon className="h-8 translate-y-[-3px]" />
     </button>
   );

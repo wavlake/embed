@@ -7,7 +7,7 @@ export default function EmbedPlayButton(props) {
   return (
     <button
       onClick={clickHandler}
-      className="h-7 rounded-full bg-brand-pink fill-black p-2 font-semibold tracking-tight transition hover:bg-brand-pink-light"
+      className="h-7 rounded-full bg-white fill-black p-2 font-semibold tracking-tight"
     >
       {isPlaying ? (
         <PauseIcon className="h-3"></PauseIcon>

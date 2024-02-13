@@ -10,7 +10,7 @@ const BoostButton = () => {
   return (
     <button
       type="submit"
-      className="flex items-center gap-1 fill-brand-pink-light text-brand-pink-light transition  hover:fill-brand-pink hover:text-brand-pink"
+      className="flex items-center gap-1 fill-white text-white"
     >
       <p>Zap</p>
       <BoostIcon className="h-9 cursor-pointer" />
@@ -92,11 +92,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
 
   return (
     <div className="flex flex-col rounded-3xl bg-brand-black p-4">
-      <button
-        onClick={backToPlayer}
-        type="button"
-        className="self-end pr-3 transition hover:text-brand-pink"
-      >
+      <button onClick={backToPlayer} type="button" className="self-end pr-3">
         Back
       </button>
       <FormProvider {...methods}>

@@ -30,12 +30,12 @@ export const NowPlayingMetadata = ({ activeContent }) => {
         )}
         target={"_blank"}
         rel={"noreferrer"}
-        className="text-md max-w-fit font-semibold transition hover:text-brand-pink"
+        className="text-md max-w-fit font-semibold"
       >
         {activeContent.title}
       </a>
       <a
-        className="max-w-fit text-sm underline transition hover:text-brand-pink"
+        className="max-w-fit text-sm underline"
         href={parentContentLink(
           activeContent.podcast === undefined,
           activeContent.artistUrl || activeContent.podcast?.url
@@ -59,10 +59,7 @@ export const Logo = ({ activeContent }) => {
       rel={"noreferrer"}
       className="w-10 "
     >
-      <LogoIcon
-        className="h-7 w-10 fill-white transition hover:fill-brand-pink"
-        viewBox="0 0 1200 1200"
-      />
+      <LogoIcon className="h-7 w-10 fill-white" viewBox="0 0 1200 1200" />
     </a>
   );
 };
