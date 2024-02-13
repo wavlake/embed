@@ -5,7 +5,8 @@ import EmbedForwardButton from "./embedForwardButton";
 const PROGRESS_BAR_CLICK_OFFSET = 190;
 
 const ProgressBar = ({ trackProgress, playerRef }) => {
-  const progressBarWidth = document.getElementById("progressBar")?.offsetWidth;
+  const progressBarWidth = document?.getElementById("progressBar")?.offsetWidth;
+  const progressPixels = (progressBarWidth * trackProgress) / 100 ?? 0;
   const onSeekHandler = ({ clientX }) => {
     const clickXPosition = clientX - PROGRESS_BAR_CLICK_OFFSET;
     const targetSeek = clickXPosition / progressBarWidth;
@@ -29,9 +30,7 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
         }}
       />
       <div
-        className={`z-11 absolute h-2 w-2 translate-x-[${
-          (progressBarWidth * trackProgress) / 100
-        }px] hidden rounded-full bg-white group-hover:block`}
+        className={`z-11 absolute h-2 w-2 translate-x-[${progressPixels}px] hidden rounded-full bg-white group-hover:block`}
       />
     </button>
   );
