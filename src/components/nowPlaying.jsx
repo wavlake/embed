@@ -9,7 +9,11 @@ import { PlayerControls } from "./playerControls";
 
 const BoostButton = ({ onClick }) => {
   return (
-    <button className="rounded-full fill-white" type="button" onClick={onClick}>
+    <button
+      className="rounded-full fill-white hover:fill-brand-pink"
+      type="button"
+      onClick={onClick}
+    >
       <CommentIcon className="h-8 translate-y-[-3px]" />
     </button>
   );
@@ -27,7 +31,7 @@ export const NowPlaying = ({
 }) => {
   const activeContent = trackData[currentTrackIndex];
   return (
-    <div className="flex w-full flex-row items-start gap-3 rounded-3xl bg-neutral-800 px-4 pt-4">
+    <div className="flex w-full flex-row items-start gap-3 rounded-3xl bg-brand-black-light px-4 pt-4">
       <NowPlayingAlbumArt activeContent={activeContent} />
       <EmbedPlayButton
         clickHandler={() => setIsPlaying(!isPlaying)}

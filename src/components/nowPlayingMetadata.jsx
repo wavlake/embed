@@ -30,12 +30,12 @@ export const NowPlayingMetadata = ({ activeContent }) => {
         )}
         target={"_blank"}
         rel={"noreferrer"}
-        className="text-md max-w-fit font-semibold"
+        className="text-md max-w-fit font-semibold hover:text-gray-400"
       >
         {activeContent.title}
       </a>
       <a
-        className="max-w-fit text-sm underline"
+        className="max-w-fit text-sm underline hover:text-gray-400"
         href={parentContentLink(
           activeContent.podcast === undefined,
           activeContent.artistUrl || activeContent.podcast?.url
@@ -57,9 +57,12 @@ export const Logo = ({ activeContent }) => {
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
       target={"_blank"}
       rel={"noreferrer"}
-      className="w-10 "
+      className="w-10"
     >
-      <LogoIcon className="h-7 w-10 fill-white" viewBox="0 0 1200 1200" />
+      <LogoIcon
+        className="h-7 w-10 fill-white hover:fill-gray-400"
+        viewBox="0 0 1200 1200"
+      />
     </a>
   );
 };
@@ -70,7 +73,7 @@ export const NowPlayingAlbumArt = ({ activeContent }) => {
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
       target={"_blank"}
       rel={"noreferrer"}
-      className="pb-3"
+      className="pb-3 hover:opacity-80"
     >
       <Image
         src={activeContent.artworkUrl || activeContent.podcast?.artworkUrl}

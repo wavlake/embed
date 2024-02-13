@@ -28,8 +28,8 @@ module.exports = {
       },
       colors: {
         "brand-black": {
-          DEFAULT: "#171817",
-          light: "#7d7e7d",
+          DEFAULT: "#000000",
+          light: "#171817",
         },
         "brand-pink": {
           DEFAULT: "#f3aef2",
