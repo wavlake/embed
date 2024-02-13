@@ -20,7 +20,7 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
     >
       <div className="h-0.5 w-full rounded-sm bg-white" />
       <div
-        className={`absolute z-10 h-0.5 rounded-sm bg-gray-300`}
+        className={`absolute z-10 h-0.5 rounded-sm bg-gray-500`}
         style={{
           width: `${trackProgress}%`,
           transitionProperty: "width",
