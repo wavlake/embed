@@ -28,6 +28,7 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
           transitionTimingFunction: "linear",
         }}
       />
+      <div className="z-11 absolute hidden h-2 w-2 rounded-full bg-white" />
     </button>
   );
 };
