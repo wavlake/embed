@@ -34,9 +34,10 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
           transitionTimingFunction: "linear",
         }}
       >
-        <div
-          className={`absolute top-[0.5px] right-[1px] hidden h-2 w-2 translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white group-hover:block`}
-        />
+        {/* scrubber element WIP */}
+        {/* <div
+          className={`absolute top-1/2 right-0 h-2 w-2 translate-y-[-50%] translate-x-1 transform rounded-full bg-white group-hover:block`}
+        /> */}
       </div>
     </button>
   );
