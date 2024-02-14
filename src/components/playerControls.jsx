@@ -24,9 +24,9 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
       ref={progressBarRef}
       onClick={onSeekHandler}
     >
-      <div className="h-0.5 w-full rounded-sm bg-white" />
+      <div className="h-1 w-full rounded-sm bg-gray-500" />
       <div
-        className={`absolute z-10 h-0.5 rounded-sm bg-gray-500`}
+        className={`absolute z-10 h-1 rounded-sm bg-white`}
         style={{
           width: `${trackProgress}%`,
           transitionProperty: "width",
@@ -46,29 +46,31 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
 export const PlayerControls = ({
   playerRef,
   trackProgress,
-  multiTrack,
+  isSingle,
   currentTrackIndex,
   trackDataLength,
   setCurrentTrackIndex,
 }) => {
   return (
     <div className="flex h-10 grow flex-row items-center gap-2">
-      <button
-        onClick={() => {
-          if (multiTrack && currentTrackIndex > 0) {
-            // move to previous track, unless we're on index 0
-            setCurrentTrackIndex(currentTrackIndex - 1);
-          } else {
-            // single track, restart track
-            playerRef.current.seekTo(0);
-          }
-        }}
-        className="rotate-180"
-      >
-        <EmbedForwardButton />
-      </button>
+      {!isSingle && (
+        <button
+          onClick={() => {
+            if (!isSingle && currentTrackIndex > 0) {
+              // move to previous track, unless we're on index 0
+              setCurrentTrackIndex(currentTrackIndex - 1);
+            } else {
+              // single track, restart track
+              playerRef.current.seekTo(0);
+            }
+          }}
+          className="rotate-180"
+        >
+          <EmbedForwardButton />
+        </button>
+      )}
       <ProgressBar trackProgress={trackProgress} playerRef={playerRef} />
-      {multiTrack && (
+      {!isSingle && (
         <button
           className=""
           onClick={() => {

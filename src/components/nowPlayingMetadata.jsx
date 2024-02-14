@@ -67,7 +67,7 @@ export const Logo = ({ activeContent }) => {
   );
 };
 
-export const NowPlayingAlbumArt = ({ activeContent }) => {
+export const NowPlayingAlbumArt = ({ activeContent, isSingle }) => {
   return (
     <a
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
@@ -77,8 +77,8 @@ export const NowPlayingAlbumArt = ({ activeContent }) => {
     >
       <Image
         src={activeContent.artworkUrl || activeContent.podcast?.artworkUrl}
-        width={70}
-        height={70}
+        width={isSingle ? 250 : 70}
+        height={isSingle ? 250 : 70}
       />
     </a>
   );

@@ -29,9 +29,36 @@ export const NowPlaying = ({
   openBoostForm,
   setCurrentTrackIndex,
 }) => {
+  const isSingle = trackData.length === 1;
   const activeContent = trackData[currentTrackIndex];
-  return (
-    <div className="flex w-full flex-row items-start gap-3 rounded-3xl bg-brand-black-light px-4 pt-4">
+
+  return isSingle ? (
+    <div className="flex flex-col items-center">
+      <NowPlayingAlbumArt isSingle={isSingle} activeContent={activeContent} />
+      <div className="flex w-full flex-row justify-between pr-1">
+        <NowPlayingMetadata activeContent={activeContent} />
+        <BoostButton onClick={openBoostForm} />
+      </div>
+      <div className="flex w-full flex-row items-center gap-3">
+        <EmbedPlayButton
+          clickHandler={() => setIsPlaying(!isPlaying)}
+          isPlaying={isPlaying}
+        />
+        <PlayerControls
+          playerRef={playerRef}
+          trackProgress={trackProgress}
+          isSingle={isSingle}
+          currentTrackIndex={currentTrackIndex}
+          trackDataLength={trackData.length}
+          setCurrentTrackIndex={setCurrentTrackIndex}
+        />
+        <Logo activeContent={activeContent} />
+      </div>
+    </div>
+  ) : (
+    <div
+      className={`flex w-full flex-row items-start gap-3 rounded-3xl bg-brand-black-light px-4 pt-4`}
+    >
       <NowPlayingAlbumArt activeContent={activeContent} />
       <EmbedPlayButton
         clickHandler={() => setIsPlaying(!isPlaying)}
@@ -46,7 +73,7 @@ export const NowPlaying = ({
         <PlayerControls
           playerRef={playerRef}
           trackProgress={trackProgress}
-          multiTrack={trackData.length > 1}
+          isSingle={isSingle}
           currentTrackIndex={currentTrackIndex}
           trackDataLength={trackData.length}
           setCurrentTrackIndex={setCurrentTrackIndex}
