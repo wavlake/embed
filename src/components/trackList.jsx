@@ -8,7 +8,7 @@ const formatSeconds = (duration) => {
 const Track = ({ track, isMultiTrack, order, onClick }) => {
   return (
     <div
-      className="text-md box-content flex gap-2 py-1 px-4 transition hover:cursor-pointer hover:rounded-md hover:bg-brand-black-light"
+      className="box-content flex gap-2 px-4 text-sm transition hover:cursor-pointer hover:rounded-md hover:bg-brand-black-light"
       onClick={onClick}
     >
       <div className="min-w-7 w-7 flex-none">{order}.</div>
