@@ -26,14 +26,16 @@ export default function EmbedPlayer(props) {
 
   return trackData.length > 0 ? (
     <div
-      className={`${
-        isSingle ? "max-w-sm" : "max-w-3xl"
-      } tracking-tight text-white transition`}
+      className={`h-[380px] w-full rounded-3xl bg-brand-black p-4 tracking-tight text-white transition`}
     >
       <FlipCard
         isFlipped={viewForm}
         frontComponent={
-          <div className="flex h-[380px] flex-col gap-8 rounded-3xl bg-brand-black p-4">
+          <div
+            className={`${
+              isSingle ? "max-w-md" : "max-w-3xl"
+            } mx-auto flex h-full flex-col gap-8`}
+          >
             <NowPlaying
               trackData={trackData}
               currentTrackIndex={currentTrackIndex}
@@ -54,7 +56,11 @@ export default function EmbedPlayer(props) {
           </div>
         }
         backComponent={
-          <div className="h-[380px]">
+          <div
+            className={`${
+              isSingle ? "max-w-md" : "max-w-3xl"
+            } mx-auto flex h-full`}
+          >
             <BoostForm
               contentId={trackData[currentTrackIndex]?.id}
               backToPlayer={() => setViewForm(false)}
