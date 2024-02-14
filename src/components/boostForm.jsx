@@ -98,19 +98,18 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
   };
 
   if (successMessage) {
-    resetBoostPage();
-
     setTimeout(() => {
       backToPlayer();
+      resetBoostPage();
     }, 4000);
 
     return (
-      <div className="flex h-full w-full flex-col justify-center rounded-3xl bg-brand-black p-4">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-8 rounded-3xl bg-brand-black p-4">
         <p className="text-lg text-white">{successMessage}</p>
         <button
           onClick={backToPlayer}
           type="button"
-          className="rounded-xl bg-brand-pink px-4 py-2 text-white"
+          className="text-white hover:text-gray-300"
         >
           Back
         </button>
@@ -143,7 +142,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
       ) : (
         <FormProvider {...methods}>
           <form
-            className="flex flex-grow flex-col items-center gap-4"
+            className="mt-20 flex flex-grow flex-col items-center gap-4"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             <TextInput
