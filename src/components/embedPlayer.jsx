@@ -54,10 +54,12 @@ export default function EmbedPlayer(props) {
           </div>
         }
         backComponent={
-          <BoostForm
-            contentId={trackData[currentTrackIndex]?.id}
-            backToPlayer={() => setViewForm(false)}
-          />
+          <div className="h-[380px]">
+            <BoostForm
+              contentId={trackData[currentTrackIndex]?.id}
+              backToPlayer={() => setViewForm(false)}
+            />
+          </div>
         }
       />
       {hasWindow && (

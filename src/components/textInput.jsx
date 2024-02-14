@@ -55,7 +55,7 @@ export const TextInput = ({
           placeholder={title}
           {...register(fieldName, options)}
           className={
-            "relative block h-full w-full appearance-none rounded-md border border-gray-300 px-3 py-2 font-normal text-gray-600 placeholder-gray-500 focus:z-10 focus:border-brand-pink focus:outline-none focus:ring-brand-pink sm:text-sm" +
+            "relative block h-full w-full resize-none appearance-none rounded-md border border-gray-300 px-3 py-2 font-normal text-gray-600 placeholder-gray-500 focus:z-10 focus:border-brand-pink focus:outline-none focus:ring-brand-pink sm:text-sm" +
             className
           }
         />

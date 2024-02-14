@@ -91,13 +91,17 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
   });
 
   return (
-    <div className="flex flex-col rounded-3xl bg-brand-black p-4">
-      <button onClick={backToPlayer} type="button" className="self-end pr-3">
+    <div className="flex h-full w-full flex-col justify-center rounded-3xl bg-brand-black p-4">
+      <button
+        onClick={backToPlayer}
+        type="button"
+        className="self-end pr-3 pt-2"
+      >
         Back
       </button>
       <FormProvider {...methods}>
         <form
-          className="flex flex-col items-center gap-4"
+          className="flex flex-grow flex-col items-center gap-4 pt-8"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
           <TextInput
@@ -109,7 +113,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
               required: "Please enter an amount",
               min: {
                 value: 1,
-                message: "Must zap at least 1 sat",
+                message: "Must zap at leastsomething liks 1 sat",
               },
               max: {
                 value: 100000,
