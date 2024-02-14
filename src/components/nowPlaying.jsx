@@ -28,8 +28,8 @@ export const NowPlaying = ({
   playerRef,
   openBoostForm,
   setCurrentTrackIndex,
+  isSingle,
 }) => {
-  const isSingle = trackData.length === 1;
   const activeContent = trackData[currentTrackIndex];
 
   return isSingle ? (

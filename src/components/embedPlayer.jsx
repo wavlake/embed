@@ -16,6 +16,8 @@ export default function EmbedPlayer(props) {
   const reactPlayer = useRef();
   const { trackData } = props;
 
+  const isSingle = trackData.length === 1;
+
   useEffect(() => {
     if (typeof window != "undefined") {
       setHasWindow(true);
@@ -23,7 +25,11 @@ export default function EmbedPlayer(props) {
   }, []);
 
   return trackData.length > 0 ? (
-    <div className="max-w-3xl tracking-tight text-white transition ">
+    <div
+      className={`${
+        isSingle ? "max-w-sm" : "max-w-3xl"
+      } tracking-tight text-white transition`}
+    >
       <FlipCard
         isFlipped={viewForm}
         frontComponent={
@@ -37,8 +43,9 @@ export default function EmbedPlayer(props) {
               playerRef={reactPlayer}
               openBoostForm={() => setViewForm(true)}
               setCurrentTrackIndex={setCurrentTrackIndex}
+              isSingle={isSingle}
             />
-            {trackData.length > 1 && (
+            {!isSingle && (
               <TrackList
                 setCurrentTrackIndex={setCurrentTrackIndex}
                 trackData={trackData}
