@@ -1,7 +1,7 @@
 import BoostIcon from "../icons/BOOST.svg";
 import poll from "../utils/poll";
 import { checkInvoice, getInvoice } from "../utils/provider";
-import FundingInvoiceModal from "./fundingInvoiceModal";
+import { PaymentScreen } from "./paymentScreen";
 import { TextInput } from "./textInput";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -10,7 +10,7 @@ const BoostButton = () => {
   return (
     <button
       type="submit"
-      className="flex items-center gap-1 fill-white text-white"
+      className="flex items-center gap-1 fill-white text-white hover:fill-brand-pink hover:text-brand-pink"
     >
       <p>Zap</p>
       <BoostIcon className="h-9 cursor-pointer" />
@@ -21,7 +21,8 @@ const BoostButton = () => {
 export const BoostForm = ({ contentId, backToPlayer }) => {
   const [webLnAvailable, setWebLnAvailable] = useState(true);
   const [paymentRequest, setPaymentRequest] = useState("");
-  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window.webln === "undefined") {
@@ -30,6 +31,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
   }, []);
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     const payload = {
       trackId: contentId,
       amount: data.amount,
@@ -50,18 +52,19 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
           await webln.enable();
           const result = await window.webln.sendPayment(paymentRequest);
           if (result.preimage) {
+            setIsLoading(false);
             setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-            setViewForm(false);
-            reset();
           }
           return;
         } catch (err) {
           // user cancelled WebLN
+          // proceed with regular QR code
         }
       }
 
       setPaymentRequest(paymentRequest);
-      setIsInvoiceOpen(true);
+      setIsLoading(false);
+
       poll({
         fn: checkInvoice,
         data: { paymentHash: paymentHash },
@@ -69,14 +72,12 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
         maxAttempts: 12,
       })
         .then(() => {
-          setIsInvoiceOpen(false);
-          setViewForm(false);
+          // success
           setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-          reset();
         })
         .catch(() => {
-          setIsInvoiceOpen(false);
-          setViewForm(false);
+          // failure
+          console.error("Boost check failed");
         });
     } catch (e) {
       console.error(e);
@@ -90,59 +91,95 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
     },
   });
 
+  const resetBoostPage = () => {
+    methods.reset();
+    setPaymentRequest("");
+    setSuccessMessage("");
+  };
+
+  if (successMessage) {
+    resetBoostPage();
+
+    setTimeout(() => {
+      backToPlayer();
+    }, 4000);
+
+    return (
+      <div className="flex h-full w-full flex-col justify-center rounded-3xl bg-brand-black p-4">
+        <p className="text-lg text-white">{successMessage}</p>
+        <button
+          onClick={backToPlayer}
+          type="button"
+          className="rounded-xl bg-brand-pink px-4 py-2 text-white"
+        >
+          Back
+        </button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center rounded-3xl bg-brand-black p-4">
+        <p className="text-lg text-white">Processing...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full w-full flex-col justify-center rounded-3xl bg-brand-black p-4">
       <button
         onClick={backToPlayer}
         type="button"
-        className="self-end pr-3 pt-2"
+        className="self-end py-2 pr-3"
       >
         Back
       </button>
-      <FormProvider {...methods}>
-        <form
-          className="flex flex-grow flex-col items-center gap-4 pt-8"
-          onSubmit={methods.handleSubmit(onSubmit)}
-        >
-          <TextInput
-            fieldName="amount"
-            type="number"
-            title="Amount (sats)"
-            helperText="Min 1 sat, max 100,000 sats"
-            options={{
-              required: "Please enter an amount",
-              min: {
-                value: 1,
-                message: "Must zap at leastsomething liks 1 sat",
-              },
-              max: {
-                value: 100000,
-                message: "Maximum 100 000 sats",
-              },
-            }}
-          />
-          <TextInput
-            fieldName="comment"
-            type="textarea"
-            title="Message (optional)"
-            options={{
-              required: false,
-              maxLength: {
-                value: 312,
-                message: "Max 312 characters",
-              },
-            }}
-            helperText="Max 312 characters"
-          />
-          <BoostButton />
-        </form>
-      </FormProvider>
-      <FundingInvoiceModal
-        reset={methods.reset}
-        isInvoiceOpen={isInvoiceOpen}
-        setIsInvoiceOpen={setIsInvoiceOpen}
-        paymentRequest={paymentRequest}
-      />
+      {paymentRequest ? (
+        <PaymentScreen
+          paymentRequest={paymentRequest}
+          setPaymentRequest={setPaymentRequest}
+        />
+      ) : (
+        <FormProvider {...methods}>
+          <form
+            className="flex flex-grow flex-col items-center gap-4"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <TextInput
+              fieldName="amount"
+              type="number"
+              title="Amount (sats)"
+              helperText="Min 1 sat, max 100,000 sats"
+              options={{
+                required: "Please enter an amount",
+                min: {
+                  value: 1,
+                  message: "Must zap at least something, like 1 sat",
+                },
+                max: {
+                  value: 100000,
+                  message: "Maximum 100 000 sats",
+                },
+              }}
+            />
+            <TextInput
+              fieldName="comment"
+              type="textarea"
+              title="Message (optional)"
+              options={{
+                required: false,
+                maxLength: {
+                  value: 312,
+                  message: "Max 312 characters",
+                },
+              }}
+              helperText="Max 312 characters"
+            />
+            <BoostButton />
+          </form>
+        </FormProvider>
+      )}
     </div>
   );
 };
