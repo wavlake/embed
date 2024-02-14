@@ -2,15 +2,19 @@ import PauseIcon from "./../icons/pause.svg";
 import PlayIcon from "./../icons/play.svg";
 
 export default function EmbedPlayButton(props) {
-  const { isPlaying } = props;
+  const { isPlaying, clickHandler } = props;
 
   return (
-    <div className="mr-2 flex h-7 cursor-pointer items-center space-x-1 rounded-full bg-brand-pink p-2 font-semibold tracking-tight hover:bg-brand-pink-light">
+    <button
+      onClick={clickHandler}
+      className="h-7 rounded-full bg-white fill-black p-2 font-semibold tracking-tight hover:bg-brand-pink"
+    >
       {isPlaying ? (
-        <PauseIcon className="flex h-3 fill-brand-black" />
+        <PauseIcon className="h-3"></PauseIcon>
       ) : (
-        <PlayIcon className={`flex h-3 fill-brand-black`} />
+        // translate-x-px makes the icon look centered
+        <PlayIcon className="h-3 translate-x-px"></PlayIcon>
       )}
-    </div>
+    </button>
   );
 }
