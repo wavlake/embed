@@ -1,18 +1,16 @@
 import EmbedForwardButton from "./embedForwardButton";
 import { useRef } from "react";
 
-// This is determined by guess and check
-// Click the progress bar and see where the progress jumps to, adjust as needed
-const PROGRESS_BAR_CLICK_OFFSET = 190;
-
 const ProgressBar = ({ trackProgress, playerRef }) => {
   const progressBarRef = useRef(null);
 
   const onSeekHandler = ({ clientX }) => {
     const progressBarWidth = progressBarRef?.current?.offsetWidth ?? 0;
+    const progressBarXStart = progressBarRef?.current?.offsetLeft ?? 0;
+
     if (progressBarWidth === 0) return;
 
-    const clickXPosition = clientX - PROGRESS_BAR_CLICK_OFFSET;
+    const clickXPosition = clientX - progressBarXStart;
     const targetSeek = clickXPosition / progressBarWidth;
     playerRef.current.seekTo(targetSeek);
   };
