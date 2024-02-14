@@ -149,12 +149,12 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
               fieldName="amount"
               type="number"
               title="Amount (sats)"
-              helperText="Min 1 sat, max 100,000 sats"
+              helperText="Min 10 sats, max 100,000 sats"
               options={{
                 required: "Please enter an amount",
                 min: {
-                  value: 1,
-                  message: "Must zap at least something, like 1 sat",
+                  value: 10,
+                  message: "Must zap at least something, like 10 sats",
                 },
                 max: {
                   value: 100000,
