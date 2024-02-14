@@ -3,6 +3,7 @@ import poll from "../utils/poll";
 import { checkInvoice, getInvoice } from "../utils/provider";
 import { PaymentScreen } from "./paymentScreen";
 import { TextInput } from "./textInput";
+import WavGraphic from "./wavGraphic";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -104,7 +105,8 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
     }, 4000);
 
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-8 rounded-3xl bg-brand-black p-4">
+      <div className="flex h-full w-full flex-col items-center justify-center gap-6 rounded-3xl bg-brand-black p-4">
+        <WavGraphic />
         <p className="text-lg text-white">{successMessage}</p>
         <button
           onClick={backToPlayer}
