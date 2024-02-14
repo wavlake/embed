@@ -163,7 +163,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
                 },
               }}
             />
-            <TextInput
+            {/* <TextInput
               fieldName="comment"
               type="textarea"
               title="Message (optional)"
@@ -175,7 +175,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
                 },
               }}
               helperText="Max 312 characters"
-            />
+            /> */}
             <BoostButton />
           </form>
         </FormProvider>
