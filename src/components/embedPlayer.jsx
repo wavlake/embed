@@ -26,7 +26,7 @@ export default function EmbedPlayer(props) {
 
   return trackData.length > 0 ? (
     <div
-      className={`h-[380px] w-full rounded-3xl bg-brand-black p-4 tracking-tight text-white transition`}
+      className={`h-full w-full rounded-3xl bg-brand-black p-4 tracking-tight text-white transition`}
     >
       <FlipCard
         isFlipped={viewForm}
