@@ -29,7 +29,8 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
         style={{
           width: `${trackProgress}%`,
           transitionProperty: "width",
-          transitionDuration: "0.5s",
+          // react player updates the progress every 1s, so we want to match that
+          transitionDuration: "1s",
           transitionTimingFunction: "linear",
         }}
       >
