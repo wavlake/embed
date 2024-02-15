@@ -5,8 +5,9 @@ const ProgressBar = ({ trackProgress, playerRef }) => {
   const progressBarRef = useRef(null);
 
   const onSeekHandler = ({ clientX }) => {
-    const progressBarWidth = progressBarRef?.current?.offsetWidth ?? 0;
-    const progressBarXStart = progressBarRef?.current?.offsetLeft ?? 0;
+    const boundingRect = progressBarRef?.current?.getBoundingClientRect();
+    const progressBarWidth = boundingRect?.width ?? 0;
+    const progressBarXStart = boundingRect?.x ?? 0;
 
     if (progressBarWidth === 0) return;
 
