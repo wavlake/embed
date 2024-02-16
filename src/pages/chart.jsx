@@ -10,8 +10,17 @@ export async function getServerSideProps(context) {
 
   const result = await fetch(`${domain}/api/chart?${queryString}`);
 
-  const data = await result.json();
-
+  const data = await result.json();.
+  
+  if (!data) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  
   return { props: { trackData: data } };
 }
 
