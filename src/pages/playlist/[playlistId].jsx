@@ -4,10 +4,7 @@ const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 
 export async function getServerSideProps(context) {
   const { playlistId } = context.params;
-  const { query } = context;
-  const queryString = Object.entries(query)
-    .map((entry) => entry.join("="))
-    .join("&");
+  const queryString = context.resolvedUrl.split("?")[1];
 
   const result = await fetch(
     `${domain}/api/playlist?playlist=${playlistId}?${queryString}`
