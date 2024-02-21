@@ -7,7 +7,7 @@ const formatSeconds = (duration) => {
   return `${minutes}:${seconds}`;
 };
 
-const Track = ({ track, isMultiTrack, order, onClick }) => {
+const Track = ({ track, isMultiTrack, order, onClick, showSats }) => {
   return (
     <div
       className="group box-content flex gap-2 px-4 py-0.5 text-sm transition hover:cursor-pointer hover:rounded-md hover:bg-brand-black-light"
@@ -21,7 +21,7 @@ const Track = ({ track, isMultiTrack, order, onClick }) => {
         )}
       </div>
       {/* If track has msatTotal, show it, otherwise show duration */}
-      {track.msatTotal ? (
+      {showSats ? (
         <div className="min-w-10 w-24 flex-none text-right text-gray-500">
           {satsAbbreviated(track.msatTotal)} sats
         </div>
@@ -34,7 +34,7 @@ const Track = ({ track, isMultiTrack, order, onClick }) => {
   );
 };
 
-export const TrackList = ({ trackData, setCurrentTrackIndex }) => {
+export const TrackList = ({ trackData, setCurrentTrackIndex, showSats }) => {
   const onClick = (index) => {
     setCurrentTrackIndex(index);
   };
@@ -49,6 +49,7 @@ export const TrackList = ({ trackData, setCurrentTrackIndex }) => {
           track={track}
           isMultiTrack={isMultiTrack}
           onClick={() => onClick(index)}
+          showSats={showSats}
         />
       ))}
     </div>

@@ -14,7 +14,7 @@ export default function EmbedPlayer(props) {
   const [viewForm, setViewForm] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const reactPlayer = useRef();
-  const { trackData } = props;
+  const { trackData, showSats } = props;
 
   const isSingle = trackData.length === 1;
 
@@ -51,6 +51,7 @@ export default function EmbedPlayer(props) {
               <TrackList
                 setCurrentTrackIndex={setCurrentTrackIndex}
                 trackData={trackData}
+                showSats={showSats}
               />
             )}
           </div>
