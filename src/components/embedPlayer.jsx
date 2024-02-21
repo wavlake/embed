@@ -24,7 +24,7 @@ export default function EmbedPlayer(props) {
     }
   }, []);
 
-  return trackData.length > 0 ? (
+  return trackData && trackData.length > 0 ? (
     <div
       className={`h-full w-full rounded-3xl bg-brand-black p-4 tracking-tight text-white transition`}
     >
