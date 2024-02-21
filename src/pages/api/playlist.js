@@ -1,7 +1,7 @@
 import catalogClient from "../../utils/catalogClient";
 
 export default async function handler(req, res) {
-  console.log(req.url);
+  console.log(req.url.split("?")[2]);
   await catalogClient
     // Query params located in second index of split array
     .get(
