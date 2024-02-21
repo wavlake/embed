@@ -1,21 +1,27 @@
 import EmbedPlayer from "../components/embedPlayer";
-
-const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
+import catalogClient from "../utils/catalogClient";
 
 export async function getServerSideProps(context) {
   const queryString = context.resolvedUrl.split("?")[1];
-  const showSats = queryString.includes("sort=sats");
+  const showSats = queryString ? queryString.includes("sort=sats") : false;
 
-  const result = await fetch(`${domain}/api/chart?${queryString}`);
-
-  const data = await result.json();
+  const data = await catalogClient
+    .get(`/charts/music/custom?${queryString}`)
+    .then(({ data }) => {
+      return data.data;
+    })
+    .catch(({ err }) => {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    });
 
   if (!data) {
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      notFound: true,
     };
   }
 
