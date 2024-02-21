@@ -3,9 +3,8 @@ import EmbedPlayer from "../components/embedPlayer";
 const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 
 export async function getServerSideProps(context) {
-  const { query } = context;
   const queryString = context.resolvedUrl.split("?")[1];
-  const showSats = context.resolvedUrl.includes("sort=sats");
+  const showSats = queryString.includes("sort=sats");
 
   const result = await fetch(`${domain}/api/chart?${queryString}`);
 
