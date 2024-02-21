@@ -3,12 +3,11 @@ import EmbedPlayer from "../../components/embedPlayer";
 const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 
 export async function getServerSideProps(context) {
+  console.log(context);
   const { playlistId } = context.params;
   const { sort, startDate, endDate } = context.query;
-
-  const showSats = sort ? sort.includes("sats") : false;
-
   const queryString = `sort=${sort}&startDate=${startDate}&endDate=${endDate}`;
+  const showSats = sort ? sort.includes("sats") : false;
 
   const result = await fetch(
     `${domain}/api/playlist?playlist=${playlistId}?${queryString}`
