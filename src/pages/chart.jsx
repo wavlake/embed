@@ -4,9 +4,8 @@ const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
 
 export async function getServerSideProps(context) {
   const { query } = context;
-  const queryString = Object.entries(query)
-    .map((entry) => entry.join("="))
-    .join("&");
+  const queryString = context.resolvedUrl.split("?")[1];
+  const showSats = context.resolvedUrl.includes("sort=sats");
 
   const result = await fetch(`${domain}/api/chart?${queryString}`);
 
@@ -21,11 +20,11 @@ export async function getServerSideProps(context) {
     };
   }
 
-  return { props: { trackData: data } };
+  return { props: { trackData: data, showSats: showSats } };
 }
 
 export default function Embed(props) {
-  const { trackData } = props;
+  const { trackData, showSats } = props;
 
-  return <EmbedPlayer trackData={trackData} />;
+  return <EmbedPlayer trackData={trackData} showSats={showSats} />;
 }
