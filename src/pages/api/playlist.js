@@ -2,7 +2,10 @@ import catalogClient from "../../utils/catalogClient";
 
 export default async function handler(req, res) {
   await catalogClient
-    .get(`/playlists/${req.query.playlist}`)
+    // Query params located in second index of split array
+    .get(
+      `/playlists/${req.query.playlist.split("?")[0]}?${req.url.split("?")[2]}`
+    )
     .then(({ data }) => {
       res.status(200).json(data.data);
     })

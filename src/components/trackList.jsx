@@ -1,3 +1,5 @@
+import { satsAbbreviated } from "../utils/format";
+
 const formatSeconds = (duration) => {
   const minutes = Math.floor(duration / 60);
   const seconds = (duration % 60).toString().padEnd(2, "0");
@@ -8,7 +10,7 @@ const formatSeconds = (duration) => {
 const Track = ({ track, isMultiTrack, order, onClick }) => {
   return (
     <div
-      className="box-content flex gap-2 px-4 text-sm transition hover:cursor-pointer hover:rounded-md hover:bg-brand-black-light"
+      className="group box-content flex gap-2 px-4 py-0.5 text-sm transition hover:cursor-pointer hover:rounded-md hover:bg-brand-black-light"
       onClick={onClick}
     >
       <div className="min-w-7 w-7 flex-none">{order}.</div>
@@ -18,9 +20,16 @@ const Track = ({ track, isMultiTrack, order, onClick }) => {
           <p className="truncate text-sm text-gray-500">{track.artist}</p>
         )}
       </div>
-      <div className="min-w-10 w-10 flex-none text-left text-gray-500">
-        {formatSeconds(track.duration)}
-      </div>
+      {/* If track has msatTotal, show it, otherwise show duration */}
+      {track.msatTotal ? (
+        <div className="min-w-10 w-24 flex-none text-right text-gray-500">
+          {satsAbbreviated(track.msatTotal)} sats
+        </div>
+      ) : (
+        <div className="min-w-10 w-10 flex-none text-left text-gray-500">
+          {formatSeconds(track.duration)}
+        </div>
+      )}
     </div>
   );
 };
