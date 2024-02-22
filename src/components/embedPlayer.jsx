@@ -84,7 +84,6 @@ export default function EmbedPlayer(props) {
         <ReactPlayer
           ref={reactPlayer}
           controls={false}
-          autoPlay={true}
           url={trackData[currentTrackIndex].liveUrl}
           playing={isPlaying}
           onEnded={handleTrackEnd}
