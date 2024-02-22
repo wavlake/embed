@@ -24,6 +24,17 @@ export default function EmbedPlayer(props) {
     }
   }, []);
 
+  const handleTrackEnd = () => {
+    if (currentTrackIndex < trackData.length - 1) {
+      // play the next track
+      setCurrentTrackIndex(currentTrackIndex + 1);
+      setIsPlaying(true);
+    } else {
+      // loop back to the beginning
+      setCurrentTrackIndex(0);
+    }
+  };
+
   return trackData && trackData.length > 0 ? (
     <div
       className={`h-full w-full rounded-3xl bg-brand-black p-4 tracking-tight text-white transition`}
@@ -75,6 +86,7 @@ export default function EmbedPlayer(props) {
           controls={false}
           url={trackData[currentTrackIndex].liveUrl}
           playing={isPlaying}
+          onEnded={handleTrackEnd}
           // if the player play/pause state is toggled by something other than the play button
           // we need to update the state to reflect that
           // e.g. a keyboard shortcut play/pause button
