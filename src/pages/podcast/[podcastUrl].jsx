@@ -1,22 +1,44 @@
 import EmbedPlayer from "../../components/embedPlayer";
+import catalogClient from "../../utils/catalogClient";
 
-const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-}
-
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   const { podcastUrl } = context.params;
 
-  const result = await fetch(`${domain}/api/podcast?podcastUrl=${podcastUrl}`);
+  const podcastId = await catalogClient
+    .get(`/podcasts/${podcastUrl}/url`)
+    .then(({ data }) => {
+      return data?.data?.id;
+    })
+    .catch(({ err }) => {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    });
 
-  const data = await result.json();
+  const data = await catalogClient
+    .get(`/episodes/${podcastId}/podcast`)
+    .then(({ data }) => {
+      return data.data;
+    })
+    .catch(({ err }) => {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    });
 
-  return { props: { trackData: data.data } };
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return { props: { trackData: data } };
 }
 
 export default function Embed(props) {
