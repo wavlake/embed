@@ -38,7 +38,9 @@ export const NowPlayingMetadata = ({ activeContent }) => {
         className="max-w-fit text-sm underline hover:text-gray-400"
         href={parentContentLink(
           activeContent.podcast === undefined,
-          activeContent.artistUrl || activeContent.podcast?.url
+          activeContent.artistUrl ||
+            activeContent.podcast?.podcastUrl ||
+            activeContent.podcastUrl
         )}
         target={"_blank"}
         rel={"noreferrer"}
