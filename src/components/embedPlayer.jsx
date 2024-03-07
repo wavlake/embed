@@ -11,6 +11,7 @@ export default function EmbedPlayer(props) {
   const [hasWindow, setHasWindow] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
+  const [trackPlayedSeconds, setTrackPlayedSeconds] = useState(0);
   const [viewForm, setViewForm] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const reactPlayer = useRef();
@@ -76,6 +77,7 @@ export default function EmbedPlayer(props) {
             <BoostForm
               contentId={trackData[currentTrackIndex]?.id}
               backToPlayer={() => setViewForm(false)}
+              trackPlayedSeconds={trackPlayedSeconds}
             />
           </div>
         }
@@ -100,6 +102,7 @@ export default function EmbedPlayer(props) {
           width="0"
           onProgress={(progress) => {
             setTrackProgress(progress.played * 100);
+            setTrackPlayedSeconds(parseInt(progress.playedSeconds));
           }}
         />
       )}
