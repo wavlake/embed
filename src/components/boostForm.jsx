@@ -19,7 +19,7 @@ const BoostButton = () => {
   );
 };
 
-export const BoostForm = ({ contentId, backToPlayer }) => {
+export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
   const [webLnAvailable, setWebLnAvailable] = useState(true);
   const [paymentRequest, setPaymentRequest] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -37,6 +37,7 @@ export const BoostForm = ({ contentId, backToPlayer }) => {
       trackId: contentId,
       amount: data.amount,
       type: "boost",
+      timestamp: trackPlayedSeconds,
       // metadata: {},
     };
 
