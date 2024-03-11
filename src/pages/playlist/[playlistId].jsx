@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  return { props: { trackData: data, showSats: showSats } };
+  return { props: { trackData: data.tracks, showSats: showSats } };
 }
 
 export default function Embed(props) {
