@@ -1,11 +1,15 @@
 import BoostIcon from "../icons/BOOST.svg";
-import poll from "../utils/poll";
-import { checkInvoice, getInvoice } from "../utils/provider";
+import { getZapRequestInvoice } from "../utils/zapRequest";
 import { PaymentScreen } from "./paymentScreen";
 import { TextInput } from "./textInput";
 import WavGraphic from "./wavGraphic";
-import { useEffect, useState } from "react";
+import { bytesToHex } from "@noble/hashes/utils";
+import { dateToUnix, useNostrEvents } from "nostr-react";
+import { generateSecretKey, getPublicKey } from "nostr-tools";
+import { useEffect, useState, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+
+const wavlakePubKey = process.env.NEXT_PUBLIC_NOSTR_PUBKEY || "";
 
 const BoostButton = () => {
   return (
@@ -23,7 +27,13 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
   const [webLnAvailable, setWebLnAvailable] = useState(true);
   const [paymentRequest, setPaymentRequest] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [randomPubkey, setRandomPubkey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [zapError, setZapError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [watchForZapReceipt, setWatchForZapReceipt] = useState(false);
+  const [eventIndex, setEventIndex] = useState(undefined);
+  const [zapAmount, setZapAmount] = useState(0);
 
   useEffect(() => {
     if (typeof window.webln === "undefined") {
@@ -31,23 +41,65 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
     }
   }, []);
 
+  const now = useRef(new Date());
+  const zapReceiptFilter = {
+    kinds: [9735],
+    since: dateToUnix(now.current),
+  };
+
+  const { events } = useNostrEvents({
+    filter: zapReceiptFilter,
+    enabled: watchForZapReceipt,
+  });
+
+  useEffect(() => {
+    // done if no events
+    if (!events.length) return;
+    // done if we've already checked all events
+    // without this early return, we'll get stuck in an infinite loop
+    if (events.length - 1 === eventIndex) return;
+    // update event index
+    setEventIndex(events.length - 1);
+    // grab the most recently added event
+    const [newEvent] = events;
+    // check event
+    checkEvent(newEvent);
+  }, [events]);
+
+  const checkEvent = (event) => {
+    const isZapFromListener = event.tags.some(
+      ([tag, value]) =>
+        tag === "description" && JSON.parse(value).pubkey === randomPubkey
+    );
+
+    if (isZapFromListener) {
+      setSuccessMessage(`Boosted ${zapAmount} sats! ⚡️`);
+    }
+  };
+
   const onSubmit = async (data) => {
     setIsLoading(true);
-    const payload = {
-      trackId: contentId,
-      amount: data.amount,
-      type: "boost",
-      timestamp: trackPlayedSeconds,
-      // metadata: {},
-    };
+    setZapAmount(data.amount);
+    // generate random secret key to sign the zap request
+    const randomSecret = generateSecretKey();
+    setRandomPubkey(getPublicKey(randomSecret));
 
     try {
-      const result = await getInvoice(payload);
+      const invoice = await getZapRequestInvoice({
+        content: data.comment,
+        trackId: contentId,
+        satAmount: data.amount,
+        timestamp: trackPlayedSeconds,
+        randomSecret: bytesToHex(randomSecret),
+      });
 
-      const resultJson = await result.json();
+      if (!invoice) {
+        setZapError("Error creating invoice");
+        setIsSubmitting(false);
+        return;
+      }
 
-      const paymentRequest = resultJson.payment_request;
-      const paymentHash = resultJson.payment_hash;
+      const paymentRequest = invoice;
 
       if (webLnAvailable) {
         try {
@@ -66,21 +118,7 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
 
       setPaymentRequest(paymentRequest);
       setIsLoading(false);
-
-      poll({
-        fn: checkInvoice,
-        data: { paymentHash: paymentHash },
-        interval: 12000,
-        maxAttempts: 12,
-      })
-        .then(() => {
-          // success
-          setSuccessMessage(`Boosted ${data.amount} sats! ⚡️`);
-        })
-        .catch(() => {
-          // failure
-          console.error("Boost check failed");
-        });
+      setWatchForZapReceipt(true);
     } catch (e) {
       console.error(e);
     }
@@ -97,12 +135,14 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
     methods.reset();
     setPaymentRequest("");
     setSuccessMessage("");
+    setWatchForZapReceipt(false);
   };
 
   if (successMessage) {
     setTimeout(() => {
       backToPlayer();
       resetBoostPage();
+      setWatchForZapReceipt(false);
     }, 4000);
 
     return (
@@ -152,12 +192,12 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
               fieldName="amount"
               type="number"
               title="Amount (sats)"
-              helperText="Min 10 sats, max 100,000 sats"
+              helperText="Min 1 sats, max 100,000 sats"
               options={{
                 required: "Please enter an amount",
                 min: {
-                  value: 10,
-                  message: "Must zap at least something, like 10 sats",
+                  value: 1,
+                  message: "Must zap at least something, like 21 sats",
                 },
                 max: {
                   value: 100000,
@@ -165,7 +205,7 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
                 },
               }}
             />
-            {/* <TextInput
+            <TextInput
               fieldName="comment"
               type="textarea"
               title="Message (optional)"
@@ -177,7 +217,7 @@ export const BoostForm = ({ contentId, backToPlayer, trackPlayedSeconds }) => {
                 },
               }}
               helperText="Max 312 characters"
-            /> */}
+            />
             <BoostButton />
           </form>
         </FormProvider>
