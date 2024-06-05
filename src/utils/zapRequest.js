@@ -136,13 +136,13 @@ export const sendZapRequestReceivePaymentRequest = async ({
 
   const paymentRequestRes = await fetch(url);
   // zap is in the memo of the invoice
-  const { request } = await paymentRequestRes.json();
+  const { pr } = await paymentRequestRes.json();
 
-  if (!request) {
+  if (!pr) {
     console.error({ callback, lnurl, signedZapEvent });
     throw "Error fetching payment request";
   }
-  return request;
+  return pr;
 };
 
 const chopDecimal = (amount) => Math.floor(amount);
