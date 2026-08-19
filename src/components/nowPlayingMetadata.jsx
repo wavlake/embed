@@ -20,6 +20,8 @@ const parentContentLink = (isTrack, id) => {
 };
 
 export const NowPlayingMetadata = ({ activeContent }) => {
+  if (!activeContent) return null;
+
   return (
     // translate-y by -5px so the text aligns with the album art
     <div className="flex grow translate-y-[-4px] flex-col">
@@ -54,6 +56,8 @@ export const NowPlayingMetadata = ({ activeContent }) => {
 };
 
 export const Logo = ({ activeContent }) => {
+  if (!activeContent) return null;
+
   return (
     <a
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
@@ -70,6 +74,14 @@ export const Logo = ({ activeContent }) => {
 };
 
 export const NowPlayingAlbumArt = ({ activeContent, isSingle }) => {
+  if (!activeContent) return null;
+
+  // next/image throws when src is undefined, so skip the <Image> entirely
+  // rather than render artwork we don't have.
+  const artworkUrl =
+    activeContent.artworkUrl || activeContent.podcast?.artworkUrl;
+  const size = isSingle ? 250 : 70;
+
   return (
     <a
       href={contentLink(activeContent.podcast === undefined, activeContent.id)}
@@ -77,11 +89,14 @@ export const NowPlayingAlbumArt = ({ activeContent, isSingle }) => {
       rel={"noreferrer"}
       className="pb-3 hover:opacity-80"
     >
-      <Image
-        src={activeContent.artworkUrl || activeContent.podcast?.artworkUrl}
-        width={isSingle ? 250 : 70}
-        height={isSingle ? 250 : 70}
-      />
+      {artworkUrl ? (
+        <Image src={artworkUrl} width={size} height={size} />
+      ) : (
+        <div
+          className="bg-brand-black-light"
+          style={{ width: size, height: size }}
+        />
+      )}
     </a>
   );
 };

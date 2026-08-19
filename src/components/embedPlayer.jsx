@@ -17,7 +17,14 @@ export default function EmbedPlayer(props) {
   const reactPlayer = useRef();
   const { trackData, showSats } = props;
 
-  const isSingle = trackData.length === 1;
+  // Normalize before anything reads .length. The catalog can hand back
+  // undefined, a non-array, or an array with empty slots (e.g. [undefined]
+  // when a single track lookup misses) — all of those must fall through to
+  // <NoExist /> rather than throw during server rendering.
+  const tracks = Array.isArray(trackData) ? trackData.filter(Boolean) : [];
+  const hasTracks = tracks.length > 0;
+  const isSingle = tracks.length === 1;
+  const activeTrack = tracks[currentTrackIndex];
 
   useEffect(() => {
     if (typeof window != "undefined") {
@@ -26,7 +33,7 @@ export default function EmbedPlayer(props) {
   }, []);
 
   const handleTrackEnd = () => {
-    if (currentTrackIndex < trackData.length - 1) {
+    if (currentTrackIndex < tracks.length - 1) {
       // play the next track
       setCurrentTrackIndex(currentTrackIndex + 1);
       setIsPlaying(true);
@@ -36,7 +43,7 @@ export default function EmbedPlayer(props) {
     }
   };
 
-  return trackData && trackData.length > 0 ? (
+  return hasTracks ? (
     <div
       className={`h-full w-full rounded-3xl bg-brand-black p-4 tracking-tight text-white transition`}
     >
@@ -49,7 +56,7 @@ export default function EmbedPlayer(props) {
             } mx-auto flex h-full flex-col gap-8`}
           >
             <NowPlaying
-              trackData={trackData}
+              trackData={tracks}
               currentTrackIndex={currentTrackIndex}
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
@@ -62,7 +69,7 @@ export default function EmbedPlayer(props) {
             {!isSingle && (
               <TrackList
                 setCurrentTrackIndex={setCurrentTrackIndex}
-                trackData={trackData}
+                trackData={tracks}
                 showSats={showSats}
               />
             )}
@@ -75,7 +82,7 @@ export default function EmbedPlayer(props) {
             } mx-auto flex h-full`}
           >
             <BoostForm
-              contentId={trackData[currentTrackIndex]?.id}
+              contentId={activeTrack?.id}
               backToPlayer={() => setViewForm(false)}
               trackPlayedSeconds={trackPlayedSeconds}
             />
@@ -86,7 +93,7 @@ export default function EmbedPlayer(props) {
         <ReactPlayer
           ref={reactPlayer}
           controls={false}
-          url={trackData[currentTrackIndex].liveUrl}
+          url={activeTrack?.liveUrl}
           playing={isPlaying}
           onEnded={handleTrackEnd}
           // if the player play/pause state is toggled by something other than the play button

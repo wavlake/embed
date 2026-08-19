@@ -30,7 +30,9 @@ export const NowPlaying = ({
   setCurrentTrackIndex,
   isSingle,
 }) => {
-  const activeContent = trackData[currentTrackIndex];
+  const activeContent = trackData?.[currentTrackIndex];
+
+  if (!activeContent) return null;
 
   return isSingle ? (
     <div className="flex flex-col items-center">
@@ -49,7 +51,7 @@ export const NowPlaying = ({
           trackProgress={trackProgress}
           isSingle={isSingle}
           currentTrackIndex={currentTrackIndex}
-          trackDataLength={trackData.length}
+          trackDataLength={trackData?.length ?? 0}
           setCurrentTrackIndex={setCurrentTrackIndex}
         />
         <Logo activeContent={activeContent} />
@@ -75,7 +77,7 @@ export const NowPlaying = ({
           trackProgress={trackProgress}
           isSingle={isSingle}
           currentTrackIndex={currentTrackIndex}
-          trackDataLength={trackData.length}
+          trackDataLength={trackData?.length ?? 0}
           setCurrentTrackIndex={setCurrentTrackIndex}
         />
       </div>
