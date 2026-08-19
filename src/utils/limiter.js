@@ -30,7 +30,7 @@ export const getRateLimitMiddlewares = ({
         req.headers["x-vercel-ip-country"]
       )
     ) {
-      res.status(444).json({ error: err });
+      res.status(444).json({ error: "Unavailable in your region" });
     } else {
       res.status(200);
       next();

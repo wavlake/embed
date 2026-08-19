@@ -1,6 +1,5 @@
 import EmbedPlayer from "../../components/embedPlayer";
-
-const domain = process.env.NEXT_PUBLIC_EMBED_DOMAIN_URL;
+import catalogClient from "../../utils/catalogClient";
 
 export async function getStaticPaths() {
   return {
@@ -12,15 +11,20 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const { albumId } = context.params;
 
-  const result = await fetch(`${domain}/api/album?albumId=${albumId}`);
+  const tracks = await catalogClient
+    .get(`/tracks/${albumId}/album`)
+    .then(({ data }) => data?.data ?? null)
+    .catch(() => null);
 
-  const data = await result.json();
+  if (!tracks?.length) {
+    return { notFound: true, revalidate: 60 };
+  }
 
-  return { props: { trackData: data } };
+  return { props: { trackData: tracks, showSats: false }, revalidate: 3600 };
 }
 
 export default function Embed(props) {
-  const { trackData } = props;
+  const { trackData, showSats } = props;
 
-  return <EmbedPlayer trackData={trackData} showSats={false} />;
+  return <EmbedPlayer trackData={trackData} showSats={showSats} />;
 }
